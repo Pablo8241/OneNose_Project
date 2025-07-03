@@ -7,12 +7,20 @@ import adafruit_tca9548a
 from grove.i2c import Bus
 from rpi_ws281x import PixelStrip, Color
 
+# Define LED animation function
+def colorWipe(strip, color, wait_ms=50):
+    """Wipe color across display a pixel at a time."""
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, color)
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+
 # Address notes for each device:
 # SGP30: 0x58
-# BME680: 0x77
+# BME680: 0x76 (Default)
 # TCA9548A: 0x70 (primary), 0x71 (secondary, if A0 is shorted)
 
-# BMI 680 setup === start ===
+# BME680 setup === start ===
 # Initialize the BME680 sensor
 try:
     sensor = bme680.BME680(bme680.I2C_ADDR_PRIMARY)
@@ -38,7 +46,16 @@ for name in dir(sensor.data):
 sensor.set_gas_heater_temperature(320)
 sensor.set_gas_heater_duration(150)
 sensor.select_gas_heater_profile(0)
-# BMI 680 setup === end ===
+# BME680 setup === end ===
+
+# Grove WS2813 RGB LED Strip setup === start ===
+# connect to pin 12(slot PWM)
+PIN   = 12
+# For Grove - WS2813 RGB LED Ring - 20 LED/m
+# there are 20 RGB LEDs.
+COUNT = 20
+strip = GroveWS2813RgbStrip(PIN, COUNT)
+# Grove WS2813 RGB LED Strip setup === end ===
 
 
 # Create I2C bus as normal
@@ -59,6 +76,11 @@ sgp30_7 = seeed_sgp30.grove_sgp30(mux1[6])
 sgp30_8 = seeed_sgp30.grove_sgp30(mux1[7])
 sgp30_9 = seeed_sgp30.grove_sgp30(mux2[0])
 sgp30_10 = seeed_sgp30.grove_sgp30(mux2[1])
+
+print ('Testing LED ring functionality with a color wipe animation.')
+colorWipe(strip, Color(255, 0, 0))  # Red wipe
+colorWipe(strip, Color(0, 255, 0))  # Blue wipe
+colorWipe(strip, Color(0, 0, 255))  # Green wipe
 
 # After initial setup, can just use sensors as normal.
 while True:
@@ -88,5 +110,7 @@ while True:
                 sensor.data.gas_resistance))
         else:
             print(output)
+
+    
 
     time.sleep(1)
