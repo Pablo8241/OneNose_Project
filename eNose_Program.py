@@ -57,15 +57,14 @@ COUNT = 20
 strip = GroveWS2813RgbStrip(PIN, COUNT)
 # Grove WS2813 RGB LED Strip setup === end ===
 
-
 # Create I2C bus as normal
 i2c = board.I2C()  # uses board.SCL and board.SDA
 
-# Create the PCA9546A object and give it the I2C bus
-mux1 = adafruit_tca9548a.PCA9546A(i2c, address=0x70)
-mux2 = adafruit_tca9548a.PCA9546A(i2c, address=0x71) # Note: remember to change address by shorting the A0 pad on the module
+# Create the TCA9548A object and give it the I2C bus
+mux1 = adafruit_tca9548a.TCA9548A(i2c, address=0x70)
+mux2 = adafruit_tca9548a.TCA9548A(i2c, address=0x71) # Note: remember to change address by shorting the two A0 pads on the module
 
-# For each sensor, create it using the PCA9546A channel instead of the I2C object
+# For each sensor, create it using the TCA9548A channel instead of the I2C object
 sgp30_1 = seeed_sgp30.grove_sgp30(mux1[0])
 sgp30_2 = seeed_sgp30.grove_sgp30(mux1[1])
 sgp30_3 = seeed_sgp30.grove_sgp30(mux1[2])
