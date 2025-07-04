@@ -1,4 +1,3 @@
-
 import time
 import seeed_sgp30
 import bme680
@@ -6,6 +5,19 @@ import board
 import adafruit_tca9548a
 from grove.i2c import Bus
 from rpi_ws281x import PixelStrip, Color
+# === NOTES ===
+# Address notes for each device:
+# SGP30: 0x58
+# BME680: 0x76 (Default)
+# TCA9548A: 0x70 (primary), 0x71 (secondary, if A0 is shorted)
+#
+# Hardware setup:
+# First make sure you are looking at the eNose with the USB ports pointing towards you. Second make sure the top coover is placed
+# in such way that the BME680 port points towards you. Do not screw the top cover in place yet.
+# Connect the 4 outer SGP30 sensors starting from bottom left, going clockwise to IC0-IC3 respectively.
+# Connect the inner 6 SGP30 sensors starting from bottom left, going clockwise to IC4-IC7 on the MUX to with a default address 0x70 and the rest to IC0-IC1 on the MUX with address 0x71 respectively.
+# Connect the BME680 to any open I2C port on the eNose. Connect the RGB ring GND to any ground pin on the base hat Raspberry Pi extension board, power to the 5V power supply pin and the SIG pin to GPIO 12 (pin 32 on the Raspberry Pi header).
+# You can now screw the top cover in place.
 
 # Define LED animation function
 def colorWipe(strip, color, wait_ms=50):
@@ -14,11 +26,6 @@ def colorWipe(strip, color, wait_ms=50):
         strip.setPixelColor(i, color)
         strip.show()
         time.sleep(wait_ms/1000.0)
-
-# Address notes for each device:
-# SGP30: 0x58
-# BME680: 0x76 (Default)
-# TCA9548A: 0x70 (primary), 0x71 (secondary, if A0 is shorted)
 
 # BME680 setup === start ===
 # Initialize the BME680 sensor
@@ -65,16 +72,18 @@ mux1 = adafruit_tca9548a.TCA9548A(i2c, address=0x70)
 mux2 = adafruit_tca9548a.TCA9548A(i2c, address=0x71) # Note: remember to change address by shorting the two A0 pads on the module
 
 # For each sensor, create it using the TCA9548A channel instead of the I2C object
-sgp30_1 = seeed_sgp30.grove_sgp30(mux1[0])
-sgp30_2 = seeed_sgp30.grove_sgp30(mux1[1])
-sgp30_3 = seeed_sgp30.grove_sgp30(mux1[2])
-sgp30_4 = seeed_sgp30.grove_sgp30(mux1[3])
-sgp30_5 = seeed_sgp30.grove_sgp30(mux1[4])
-sgp30_6 = seeed_sgp30.grove_sgp30(mux1[5])
-sgp30_7 = seeed_sgp30.grove_sgp30(mux1[6])
-sgp30_8 = seeed_sgp30.grove_sgp30(mux1[7])
-sgp30_9 = seeed_sgp30.grove_sgp30(mux2[0])
-sgp30_10 = seeed_sgp30.grove_sgp30(mux2[1])
+sgp30_sensors = [
+    seeed_sgp30.grove_sgp30(mux1[0]),  # SGP30_1
+    seeed_sgp30.grove_sgp30(mux1[1]),  # SGP30_2
+    seeed_sgp30.grove_sgp30(mux1[2]),  # SGP30_3
+    seeed_sgp30.grove_sgp30(mux1[3]),  # SGP30_4
+    seeed_sgp30.grove_sgp30(mux1[4]),  # SGP30_5
+    seeed_sgp30.grove_sgp30(mux1[5]),  # SGP30_6
+    seeed_sgp30.grove_sgp30(mux1[6]),  # SGP30_7
+    seeed_sgp30.grove_sgp30(mux1[7]),  # SGP30_8
+    seeed_sgp30.grove_sgp30(mux2[0]),  # SGP30_9
+    seeed_sgp30.grove_sgp30(mux2[1])   # SGP30_10
+]
 
 print ('Testing LED ring functionality with a color wipe animation.')
 colorWipe(strip, Color(255, 0, 0))  # Red wipe
@@ -83,17 +92,26 @@ colorWipe(strip, Color(0, 0, 255))  # Green wipe
 
 # After initial setup, can just use sensors as normal.
 while True:
+    co2_readings = []
+    tvoc_readings = []
+
     # Read SGP30 sensor data
-    print(f"SGP30_1: CO2={sgp30_1.getCO2_ppm()}ppm, TVOC={sgp30_1.getTVOC_ppb()}ppb")
-    print(f"SGP30_2: CO2={sgp30_2.getCO2_ppm()}ppm, TVOC={sgp30_2.getTVOC_ppb()}ppb")
-    print(f"SGP30_3: CO2={sgp30_3.getCO2_ppm()}ppm, TVOC={sgp30_3.getTVOC_ppb()}ppb")
-    print(f"SGP30_4: CO2={sgp30_4.getCO2_ppm()}ppm, TVOC={sgp30_4.getTVOC_ppb()}ppb")
-    print(f"SGP30_5: CO2={sgp30_5.getCO2_ppm()}ppm, TVOC={sgp30_5.getTVOC_ppb()}ppb")
-    print(f"SGP30_6: CO2={sgp30_6.getCO2_ppm()}ppm, TVOC={sgp30_6.getTVOC_ppb()}ppb")
-    print(f"SGP30_7: CO2={sgp30_7.getCO2_ppm()}ppm, TVOC={sgp30_7.getTVOC_ppb()}ppb")
-    print(f"SGP30_8: CO2={sgp30_8.getCO2_ppm()}ppm, TVOC={sgp30_8.getTVOC_ppb()}ppb")
-    print(f"SGP30_9: CO2={sgp30_9.getCO2_ppm()}ppm, TVOC={sgp30_9.getTVOC_ppb()}ppb")
-    print(f"SGP30_10: CO2={sgp30_10.getCO2_ppm()}ppm, TVOC={sgp30_10.getTVOC_ppb()}ppb")
+    for i, sensor in enumerate(sgp30_sensors):
+        try:
+            co2_readings.append(sensor.getCO2_ppm())
+            tvoc_readings.append(sensor.getTVOC_ppb())
+        except Exception as e:
+            print(f"Error reading SGP30_{i+1}: {e}")
+            co2_readings.append(None)
+            tvoc_readings.append(None)
+    
+    # Print SGP30 sensor data
+    print("-" * 50)
+    for i, (co2, tvoc) in enumerate(zip(co2_readings, tvoc_readings)):
+        if co2 is not None and tvoc is not None:
+            print(f"SGP30_{i+1}: CO2={co2}ppm, TVOC={tvoc}ppb")
+        else:
+            print(f"SGP30_{i+1}: Error reading sensor")
     print("-" * 50)
 
     # Read BME680 sensor data
@@ -109,6 +127,8 @@ while True:
                 sensor.data.gas_resistance))
         else:
             print(output)
+
+    
 
     
 
