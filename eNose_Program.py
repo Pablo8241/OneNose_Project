@@ -5,19 +5,6 @@ import board
 import adafruit_tca9548a
 from grove.i2c import Bus
 from rpi_ws281x import PixelStrip, Color
-# === NOTES ===
-# Address notes for each device:
-# SGP30: 0x58
-# BME680: 0x76 (Default)
-# TCA9548A: 0x70 (primary), 0x71 (secondary, if A0 is shorted)
-#
-# Hardware setup:
-# First make sure you are looking at the eNose with the USB ports pointing towards you. Second make sure the top coover is placed
-# in such way that the BME680 port points towards you. Do not screw the top cover in place yet.
-# Connect the 4 outer SGP30 sensors starting from bottom left, going clockwise to IC0-IC3 respectively.
-# Connect the inner 6 SGP30 sensors starting from bottom left, going clockwise to IC4-IC7 on the MUX to with a default address 0x70 and the rest to IC0-IC1 on the MUX with address 0x71 respectively.
-# Connect the BME680 to any open I2C port on the eNose. Connect the RGB ring GND to any ground pin on the base hat Raspberry Pi extension board, power to the 5V power supply pin and the SIG pin to GPIO 12 (pin 32 on the Raspberry Pi header).
-# You can now screw the top cover in place.
 
 # Define LED animation function
 def colorWipe(strip, color, wait_ms=50):
