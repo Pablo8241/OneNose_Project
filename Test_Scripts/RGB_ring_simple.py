@@ -1,6 +1,6 @@
 import time
 from rpi_ws281x import Color
-from grove.grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
+from grove.RGB_ring import GroveWS2813RgbStrip
 
 # connect to pin 12(slot PWM)
 PIN   = 12
