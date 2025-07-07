@@ -1,5 +1,5 @@
 import time
-import seeed_sgp30
+import adafruit_sgp30
 import bme680
 import board
 import adafruit_tca9548a
@@ -61,17 +61,21 @@ mux2 = adafruit_tca9548a.TCA9548A(i2c, address=0x71) # Note: remember to change 
 
 # For each sensor, create it using the TCA9548A channel instead of the I2C object
 sgp30_sensors = [
-    seeed_sgp30.grove_sgp30(mux1[0]),  # SGP30_1
-    seeed_sgp30.grove_sgp30(mux1[1]),  # SGP30_2
-    seeed_sgp30.grove_sgp30(mux1[2]),  # SGP30_3
-    seeed_sgp30.grove_sgp30(mux1[3]),  # SGP30_4
-    seeed_sgp30.grove_sgp30(mux1[4]),  # SGP30_5
-    seeed_sgp30.grove_sgp30(mux1[5]),  # SGP30_6
-    seeed_sgp30.grove_sgp30(mux1[6]),  # SGP30_7
-    seeed_sgp30.grove_sgp30(mux1[7]),  # SGP30_8
-    seeed_sgp30.grove_sgp30(mux2[0]),  # SGP30_9
-    seeed_sgp30.grove_sgp30(mux2[1])   # SGP30_10
+    adafruit_sgp30.Adafruit_SGP30(mux1[0]),  # SGP30_1
+    adafruit_sgp30.Adafruit_SGP30(mux1[1]),  # SGP30_2
+    adafruit_sgp30.Adafruit_SGP30(mux1[2]),  # SGP30_3
+    adafruit_sgp30.Adafruit_SGP30(mux1[3]),  # SGP30_4
+    adafruit_sgp30.Adafruit_SGP30(mux1[4]),  # SGP30_5
+    adafruit_sgp30.Adafruit_SGP30(mux1[5]),  # SGP30_6
+    adafruit_sgp30.Adafruit_SGP30(mux1[6]),  # SGP30_7
+    adafruit_sgp30.Adafruit_SGP30(mux1[7]),  # SGP30_8
+    adafruit_sgp30.Adafruit_SGP30(mux2[0]),  # SGP30_9
+    adafruit_sgp30.Adafruit_SGP30(mux2[1])   # SGP30_10
 ]
+
+print('Initializing SGP30 sensors...')
+for sensor in sgp30_sensors:
+    sensor.iaq_init()
 
 print ('Testing LED ring functionality with a color wipe animation.')
 colorWipe(strip, Color(255, 0, 0))  # Red wipe
@@ -86,8 +90,9 @@ while True:
     # Read SGP30 sensor data
     for i, sensor in enumerate(sgp30_sensors):
         try:
-            co2_readings.append(sensor.getCO2_ppm())
-            tvoc_readings.append(sensor.getTVOC_ppb())
+            sensor.iaq_measure()  # Must call this every second
+            co2_readings.append(sensor.sensor.eCO2)
+            tvoc_readings.append(sensor.sensor.TVOC)
         except Exception as e:
             print(f"Error reading SGP30_{i+1}: {e}")
             co2_readings.append(None)
