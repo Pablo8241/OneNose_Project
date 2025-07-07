@@ -133,7 +133,11 @@ while True:
     print(f"Sensor with highest pollution: SGP30_{highest_index + 1}")
 
     highlight_led = sensor_to_led_map.get(highest_index, None)
-    strip.clear()
+    
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, Color(0, 0, 0))
+    strip.show()
+
     strip.setPixelColor(highlight_led, Color(255, 0, 0))  # red highlight
     strip.show()
 
