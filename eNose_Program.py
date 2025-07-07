@@ -76,6 +76,19 @@ sgp30_sensors = [
     adafruit_sgp30.Adafruit_SGP30(mux2[1])   # SGP30_10
 ]
 
+sensor_to_led_map = {
+    0: 1,    # Sensor 0 → LED 1
+    1: 5,    # Sensor 1 → LED 5
+    2: 11,   # Sensor 2 → LED 11
+    3: 15,   # Sensor 3 → LED 15
+    4: 0,    # Sensor 4 → LED 0 (points toward Sensor 0)
+    5: 3,    # Sensor 5 → LED 3 (between Sensor 0 and 1)
+    6: 6,    # Sensor 6 → LED 6 (points at Sensor 1)
+    7: 9,    # Sensor 7 → LED 9 (toward Sensor 2)
+    8: 12,   # Sensor 8 → LED 12 (between Sensor 2 and 3)
+    9: 15    # Sensor 9 → LED 15 (points at Sensor 3)
+}
+
 print('Initializing SGP30 sensors...')
 for sensor in sgp30_sensors:
     sensor.iaq_init()
@@ -117,17 +130,11 @@ while True:
     
     # Determine index of highest score
     highest_index = combined_scores.index(max(combined_scores))
-    print(f"\n🧭 Directional focus: Sensor #{highest_index + 1} (index {highest_index})")
+    print(f"Sensor with highest pollution: SGP30_{highest_index + 1}")
 
-    # Map sensor index to LED index using bias
-    led_index = (highest_index + LED_BIAS) % COUNT
-
-    # Clear all LEDs
-    for i in range(COUNT):
-        strip.setPixelColor(i, Color(0, 0, 0))
-
-    # Highlight the one corresponding to the highest reading
-    strip.setPixelColor(0, Color(255, 0, 0))  # Red for alert
+    highlight_led = sensor_to_led_map.get(highest_index, None)
+    strip.clear()
+    strip.setPixelColor(highlight_led, Color(255, 0, 0))  # red highlight
     strip.show()
 
     # Print SGP30 sensor data
