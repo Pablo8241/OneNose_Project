@@ -133,7 +133,7 @@ while True:
     print(f"Sensor with highest pollution: SGP30_{highest_index + 1}")
 
     highlight_led = sensor_to_led_map.get(highest_index, None)
-    
+
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(0, 0, 0))
     strip.show()
@@ -168,6 +168,4 @@ while True:
     # First normalize the readings
 
 
-    
-
-    time.sleep(1) # Adjust later to read faster (or no delay at all)
+    time.sleep(1) # Wait for 1 second before the next reading (this is the minimum required for SGP30)
