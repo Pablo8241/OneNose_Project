@@ -127,7 +127,7 @@ while True:
         strip.setPixelColor(i, Color(0, 0, 0))
 
     # Highlight the one corresponding to the highest reading
-    strip.setPixelColor(led_index, Color(255, 0, 0))  # Red for alert
+    strip.setPixelColor(0, Color(255, 0, 0))  # Red for alert
     strip.show()
 
     # Print SGP30 sensor data
