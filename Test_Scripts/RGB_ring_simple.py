@@ -24,5 +24,5 @@ while True:
     colorWipe(strip, Color(0, 255, 0))  # Blue wipe
     colorWipe(strip, Color(0, 0, 255))  # Green wipe
 
-# to run this on the Raspberry Pi: "sudo /home/raspberrypi/Desktop/OneNose_Scripts/Directional_eNose/Test_Scripts/RGB_ring_simple.py"
+# to run this on the Raspberry Pi: "sudo /home/raspberrypi/Desktop/envdir/bin/python3 /home/raspberry/Desktop/OneNose_Scripts/Directional_eNose/Test_Scripts/RGB_ring_simple.py"
 # This is because the GPIO pins need root privileges to access.
