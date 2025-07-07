@@ -5,6 +5,7 @@ import board
 import adafruit_tca9548a
 from grove.i2c import Bus
 from rpi_ws281x import PixelStrip, Color
+from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
 
 # Define LED animation function
 def colorWipe(strip, color, wait_ms=50):
