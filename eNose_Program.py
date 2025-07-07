@@ -91,8 +91,8 @@ while True:
     for i, sensor in enumerate(sgp30_sensors):
         try:
             sensor.iaq_measure()  # Must call this every second
-            co2_readings.append(sensor.sensor.eCO2)
-            tvoc_readings.append(sensor.sensor.TVOC)
+            co2_readings.append(sensor.eCO2)
+            tvoc_readings.append(sensor.TVOC)
         except Exception as e:
             print(f"Error reading SGP30_{i+1}: {e}")
             co2_readings.append(None)
