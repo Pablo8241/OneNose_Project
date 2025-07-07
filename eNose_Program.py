@@ -7,6 +7,14 @@ from grove.i2c import Bus
 from rpi_ws281x import PixelStrip, Color
 from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
 
+# Define a bias to rotate LED direction to match sensor layout
+LED_BIAS = 3  # Adjust this to match your physical LED-to-sensor orientation
+PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
+COUNT = 20  # For Grove - WS2813 RGB LED Ring - 20 LED total
+
+def normalize(value, min_val, max_val):
+    return max(0.0, min(1.0, (value - min_val) / (max_val - min_val)))
+
 # Define LED animation function
 def colorWipe(strip, color, wait_ms=50):
     """Wipe color across display a pixel at a time."""
@@ -44,11 +52,6 @@ bme680_sensor.select_gas_heater_profile(0)
 # BME680 setup === end ===
 
 # Grove WS2813 RGB LED Strip setup === start ===
-# connect to pin 12(slot PWM)
-PIN   = 12
-# For Grove - WS2813 RGB LED Ring - 20 LED/m
-# there are 20 RGB LEDs.
-COUNT = 20
 strip = GroveWS2813RgbStrip(PIN, COUNT)
 # Grove WS2813 RGB LED Strip setup === end ===
 
@@ -86,18 +89,47 @@ colorWipe(strip, Color(0, 0, 255))  # Green wipe
 while True:
     co2_readings = []
     tvoc_readings = []
+    combined_scores = []
 
     # Read SGP30 sensor data
     for i, sensor in enumerate(sgp30_sensors):
         try:
             sensor.iaq_measure()  # Must call this every second
-            co2_readings.append(sensor.eCO2)
-            tvoc_readings.append(sensor.TVOC)
+
+            co2 = sensor.eCO2
+            tvoc = sensor.TVOC
+
+            co2_readings.append(co2)
+            tvoc_readings.append(tvoc)
+
+            # Normalize (you can adjust these min/max bounds based on your expected range)
+            norm_co2 = normalize(co2, 400, 60000)  # Normalizing CO2 from 400ppm to 60000ppm
+            norm_tvoc = normalize(tvoc, 0, 60000)  # Normalizing TVOC from 0ppb to 60000ppb
+            score = norm_co2 + norm_tvoc  # Simple combined score
+
+            combined_scores.append(score)
         except Exception as e:
             print(f"Error reading SGP30_{i+1}: {e}")
+
             co2_readings.append(None)
             tvoc_readings.append(None)
+            combined_scores.append(-1)  # Force it to be lowest
     
+    # Determine index of highest score
+    highest_index = combined_scores.index(max(combined_scores))
+    print(f"\n🧭 Directional focus: Sensor #{highest_index + 1} (index {highest_index})")
+
+    # Map sensor index to LED index using bias
+    led_index = (highest_index + LED_BIAS) % COUNT
+
+    # Clear all LEDs
+    for i in range(COUNT):
+        strip.setPixelColor(i, Color(0, 0, 0))
+
+    # Highlight the one corresponding to the highest reading
+    strip.setPixelColor(led_index, Color(255, 0, 0))  # Red for alert
+    strip.show()
+
     # Print SGP30 sensor data
     print("-" * 50)
     for i, (co2, tvoc) in enumerate(zip(co2_readings, tvoc_readings)):
@@ -121,8 +153,10 @@ while True:
         else:
             print(output)
 
-    
+    # Now find which sensor has the highest readings
+    # First normalize the readings
+
 
     
 
-    time.sleep(1)
+    time.sleep(1) # Adjust later to read faster (or no delay at all)
