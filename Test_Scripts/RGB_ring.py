@@ -12,6 +12,7 @@
 #
 # Direct port of the Arduino NeoPixel library strandtest example.  Showcases
 # various animations on a strip of NeoPixels.
+# To run "sudo python {path to program}RGB_ring.py <pin> <count>"
 '''
 This is the code for
     - `Grove - WS2813 RGB LED Strip Waterproof - 30 LED/m -1m   <https://www.seeedstudio.com/Grove-WS2813-RGB-LED-Strip-Waterproof-30-LED-m-1m-p-3124.html>`_
