@@ -10,7 +10,6 @@ from rpi_ws281x import PixelStrip, Color
 from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
 
 # Define a bias to rotate LED direction to match sensor layout
-LED_BIAS = 3  # Adjust this to match your physical LED-to-sensor orientation
 PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
 COUNT = 20  # For Grove - WS2813 RGB LED Ring - 20 LED total
 
@@ -92,7 +91,8 @@ def sensor_loop():
                 co2_readings.append(None)
                 tvoc_readings.append(None)
                 combined_scores.append(-1)  # Force it to be lowest
-        
+
+        # Now find which sensor has the highest readings for determining the direction of the smell
         # --- Only use outer 4 sensors (0 to 3) for scoring and LED ---
         outer_scores = combined_scores[:4]  # only use first 4 sensor scores
 
@@ -134,10 +134,6 @@ def sensor_loop():
                     bme680_sensor.data.gas_resistance))
             else:
                 print(output)
-
-        # Now find which sensor has the highest readings
-        # First normalize the readings
-
 
         time.sleep(1) # Wait for 1 second before the next reading (this is the minimum required for SGP30)
 
