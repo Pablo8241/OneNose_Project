@@ -162,22 +162,22 @@ def start_gui():
     # Create a second label below the first one
     window.label2 = tk.Label(
         window,
-        text="Directional Electronics Nose",  # Second label text
-        foreground="gray",                       # Different color
-        background="white",                      # Same background
-        font=("Helvetica", 16),                 # Smaller font
-        justify="center"                         # Center the text
+        text="Directional Electronics Nose", 
+        foreground="gray",                       
+        background="white",                   
+        font=("Helvetica", 16),               
+        justify="center"                       
     )
     window.label2.pack(pady=(0, 10))  # Move expand=True to the second label
 
     # Create a third label below the second one
     window.label3 = tk.Label(
         window,
-        text="Smell",  # Second label text
-        foreground="gray",                       # Different color
-        background="white",                      # Same background
-        font=("Helvetica", 16),                 # Smaller font
-        justify="center"                         # Center the text
+        text="Smell", 
+        foreground="gray",                      
+        background="white",                      
+        font=("Helvetica", 56),                 
+        justify="center"                         
     )
     window.label3.pack(pady=(30, 0))  # Move expand=True to the second label
 
