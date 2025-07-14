@@ -159,6 +159,17 @@ def start_gui():
     )
     window.label.pack(expand=True)  
 
+    # Create a second label below the first one
+    window.label2 = tk.Label(
+        window,
+        text="Directional Electronics Nose",  # Second label text
+        foreground="gray",                       # Different color
+        background="white",                      # Same background
+        font=("Helvetica", 16),                 # Smaller font
+        justify="center"                         # Center the text
+    )
+    window.label2.pack()  # Pack below the first label
+
     window.mainloop()  # Start the Tkinter main loop
 
 def on_closing():
