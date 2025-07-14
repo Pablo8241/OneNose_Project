@@ -157,7 +157,7 @@ def start_gui():
         anchor="n",                   # Anchor text to the top center ('n' = north)
         justify="center"              # Center the text horizontally
     )
-    window.label.pack(pady=(0, 10))  # Add some padding below the first label
+    window.label.pack(pady=(10))  # Add some padding below the first label
 
     # Create a second label below the first one
     window.label2 = tk.Label(
@@ -168,7 +168,7 @@ def start_gui():
         font=("Helvetica", 16),                 # Smaller font
         justify="center"                         # Center the text
     )
-    window.label2.pack(pady=(10))  # Move expand=True to the second label
+    window.label2.pack(pady=(0, 10))  # Move expand=True to the second label
 
     # Create a third label below the second one
     window.label3 = tk.Label(
@@ -179,7 +179,7 @@ def start_gui():
         font=("Helvetica", 16),                 # Smaller font
         justify="center"                         # Center the text
     )
-    window.label3.pack(pady=(0, 0))  # Move expand=True to the second label
+    window.label3.pack(pady=(30, 0))  # Move expand=True to the second label
 
     window.mainloop()  # Start the Tkinter main loop
 
