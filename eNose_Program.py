@@ -179,7 +179,7 @@ def start_gui():
         font=("Helvetica", 56),                 
         justify="center"                         
     )
-    window.label3.pack(pady=(30, 0))  # Move expand=True to the second label
+    window.label3.pack(pady=(160, 0))  # Move expand=True to the second label
 
     window.mainloop()  # Start the Tkinter main loop
 
