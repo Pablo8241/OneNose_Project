@@ -147,19 +147,17 @@ def start_gui():
     window.attributes('-fullscreen', True)
 
     # GUI widgets
+    # Create a label at the top center of the window
     window.label = tk.Label(
         window,
-        text="==OneNose==",
-        foreground="black",
-        background="white",
-        font=("Helvetica", 32, "bold"),
-        anchor="center",
-        justify="center"
+        text="OneNose",           # The text to display
+        foreground="black",           # Text color
+        background="white",           # Background color
+        font=("Helvetica", 32, "bold"), # Font family, size, and style
+        anchor="n",                   # Anchor text to the top center ('n' = north)
+        justify="center"              # Center the text horizontally
     )
-    window.label.pack(expand=True)
-
-    window.label.pack()
-
+    window.label.pack(expand=True)  
 
     window.mainloop()  # Start the Tkinter main loop
 
