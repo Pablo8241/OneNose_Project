@@ -13,6 +13,8 @@ from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
 PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
 COUNT = 20  # For Grove - WS2813 RGB LED Ring - 20 LED total
 
+stop_event = threading.Event()
+
 co2_readings = []
 tvoc_readings = []
 combined_scores = []
@@ -63,7 +65,7 @@ def colorWipe(strip, color, wait_ms=50):
 
 # Reading sensor data and adjusting LED colors
 def sensor_loop():
-    while True:
+    while not stop_event.is_set():
         co2_readings.clear()
         tvoc_readings.clear()
         combined_scores.clear()
@@ -138,10 +140,17 @@ def sensor_loop():
         time.sleep(1) # Wait for 1 second before the next reading (this is the minimum required for SGP30)
 
 def start_gui():
+    global window
     window = tk.Tk()
     window.title("Directional eNose GUI")
+    window.protocol("WM_DELETE_WINDOW", on_closing)
     # Add your GUI widgets here if needed
     window.mainloop()  # Start the Tkinter main loop
+
+def on_closing():
+    print("Closing app...")
+    stop_event.set()       # Stop sensor thread
+    window.destroy()       # Close GUI
 
 def sensor_init():
     global bme680_sensor
@@ -193,5 +202,9 @@ sensor_thread.start()
 
 # Start the GUI (main thread)
 start_gui()
+
+# Wait for the sensor thread to finish after GUI closes
+sensor_thread.join()
+print("Sensor thread stopped. Exiting cleanly.")
 
 ## MAIN == end ==
