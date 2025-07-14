@@ -168,7 +168,18 @@ def start_gui():
         font=("Helvetica", 16),                 # Smaller font
         justify="center"                         # Center the text
     )
-    window.label2.pack(pady=(0, 10))  # Move expand=True to the second label
+    window.label2.pack(pady=(10))  # Move expand=True to the second label
+
+    # Create a third label below the second one
+    window.label3 = tk.Label(
+        window,
+        text="Smell",  # Second label text
+        foreground="gray",                       # Different color
+        background="white",                      # Same background
+        font=("Helvetica", 16),                 # Smaller font
+        justify="center"                         # Center the text
+    )
+    window.label3.pack(pady=(0, 0))  # Move expand=True to the second label
 
     window.mainloop()  # Start the Tkinter main loop
 
