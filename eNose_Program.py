@@ -144,13 +144,16 @@ def start_gui():
     window = tk.Tk()
     window.title("Directional eNose GUI")
     window.protocol("WM_DELETE_WINDOW", on_closing)
+    window.attributes('-fullscreen', True)
+    
     # GUI widgets
     window.label = tk.Label(
         text="==OneNose==",
-        foreground="white",  # Set the text color to white
-        background="black"  # Set the background color to black
+        foreground="black",  # Set the text color
+        background="white"  # Set the background color
     )
     window.label.pack()
+
 
     window.mainloop()  # Start the Tkinter main loop
 
