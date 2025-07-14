@@ -145,13 +145,19 @@ def start_gui():
     window.title("Directional eNose GUI")
     window.protocol("WM_DELETE_WINDOW", on_closing)
     window.attributes('-fullscreen', True)
-    
+
     # GUI widgets
     window.label = tk.Label(
+        window,
         text="==OneNose==",
-        foreground="black",  # Set the text color
-        background="white"  # Set the background color
+        foreground="black",
+        background="white",
+        font=("Helvetica", 32, "bold"),
+        anchor="center",
+        justify="center"
     )
+    window.label.pack(expand=True)
+
     window.label.pack()
 
 
