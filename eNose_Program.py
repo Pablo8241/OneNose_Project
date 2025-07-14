@@ -184,7 +184,6 @@ def sensor_init():
 
     print('Initializing SGP30 sensors...')
     for sensor in sgp30_sensors:
-        time.sleep(1)
         sensor.iaq_init()
 
     print ('Testing LED ring functionality with a color wipe animation.')
