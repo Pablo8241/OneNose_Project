@@ -186,13 +186,15 @@ def start_gui():
 def on_closing():
     print("Closing app...")
 
+    stop_event.set()       # Stop sensor thread
+
     # Small shutdown animation
     colorWipe(strip, Color(255, 0, 0))  # Red wipe
     # Turn off all LEDs
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(0, 0, 0))
+    strip.show()
 
-    stop_event.set()       # Stop sensor thread
     window.destroy()       # Close GUI
 
 def sensor_init():
