@@ -192,6 +192,7 @@ def on_closing():
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(0, 0, 0))
     strip.show()
+    strip.strip._cleanup()
 
     stop_event.set()       # Stop sensor thread
     window.destroy()       # Close GUI
@@ -231,7 +232,7 @@ def sensor_init():
         sensor.iaq_init()
 
     print ('Testing LED ring functionality with a color wipe animation.')
-    colorWipe(strip, Color(0, 0, 255))  # Green wipe
+    colorWipe(strip, Color(0, 255, 0))  # Green wipe
 
 ## MAIN == start ==
 
