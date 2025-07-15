@@ -185,6 +185,14 @@ def start_gui():
 
 def on_closing():
     print("Closing app...")
+
+    # Small shutdown animation
+    colorWipe(strip, Color(255, 0, 0))  # Red wipe
+    # Turn off all LEDs
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, Color(0, 0, 0))
+    strip.show()
+
     stop_event.set()       # Stop sensor thread
     window.destroy()       # Close GUI
 
@@ -223,8 +231,6 @@ def sensor_init():
         sensor.iaq_init()
 
     print ('Testing LED ring functionality with a color wipe animation.')
-    colorWipe(strip, Color(255, 0, 0))  # Red wipe
-    colorWipe(strip, Color(0, 255, 0))  # Blue wipe
     colorWipe(strip, Color(0, 0, 255))  # Green wipe
 
 ## MAIN == start ==
