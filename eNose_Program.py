@@ -196,7 +196,7 @@ def start_gui():
         font=("Helvetica", 80),                 
         justify="center"                         
     )
-    window.label4.pack(pady=(0, 10))  # Move expand=True to the second label
+    window.label4.pack(pady=(20, 0))  # Move expand=True to the second label
 
     exit_button = tk.Button(
         window,
