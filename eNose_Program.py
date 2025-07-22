@@ -188,6 +188,16 @@ def start_gui():
     )
     label3.pack(pady=(160, 0))  # Move expand=True to the second label
 
+    window.label4 = tk.Label(
+        window,
+        text="Add smell here later",
+        foreground="gray",                      
+        background="white",                      
+        font=("Helvetica", 80),                 
+        justify="center"                         
+    )
+    window.label4.pack(pady=(0, 10))  # Move expand=True to the second label
+
     exit_button = tk.Button(
         window,
         text="Exit",
