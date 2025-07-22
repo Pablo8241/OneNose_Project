@@ -158,7 +158,7 @@ def start_gui():
         text="OneNose",           # The text to display
         foreground="black",           # Text color
         background="white",           # Background color
-        font=("Helvetica", 32, "bold"), # Font family, size, and style
+        font=("Helvetica", 42, "bold"), # Font family, size, and style
         anchor="n",                   # Anchor text to the top center ('n' = north)
         justify="center"              # Center the text horizontally
     )
@@ -167,10 +167,10 @@ def start_gui():
     # Create a second label below the first one
     window.label2 = tk.Label(
         window,
-        text="Directional Electronics Nose", 
+        text="Directional Electronic Nose", 
         foreground="gray",                       
         background="white",                   
-        font=("Helvetica", 16),               
+        font=("Helvetica", 26),               
         justify="center"                       
     )
     window.label2.pack(pady=(0, 10))  # Move expand=True to the second label
@@ -180,7 +180,7 @@ def start_gui():
     
     label3 = tk.Label(
         window,
-        text="Smell", 
+        text="Awaiting sensor data...",  # Initial text
         foreground="gray",                      
         background="white",                      
         font=("Helvetica", 56),                 
@@ -196,7 +196,7 @@ def start_gui():
         fg="white",
         command=on_closing
     )
-    exit_button.pack(side="bottom", pady=40)
+    exit_button.pack(side="bottom", pady=30)
 
     window.mainloop()  # Start the Tkinter main loop
 
