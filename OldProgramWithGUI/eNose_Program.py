@@ -181,16 +181,6 @@ def start_gui():
     )
     window.label3.pack(pady=(160, 0))  # Move expand=True to the second label
 
-    exit_button = tk.Button(
-        window,
-        text="Exit",
-        font=("Helvetica", 20),
-        bg="red",
-        fg="white",
-        command=on_closing
-    )
-    exit_button.pack(side="bottom", pady=40)
-
     window.mainloop()  # Start the Tkinter main loop
 
 def on_closing():
