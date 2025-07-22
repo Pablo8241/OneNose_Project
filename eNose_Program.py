@@ -100,7 +100,12 @@ def sensor_loop():
 
         # Find index of max score in outer sensors
         highest_index = outer_scores.index(max(outer_scores))
-        print(f"Sensor with highest pollution (outer 4 only): SGP30_{highest_index + 1}")
+        print(f"Sensor with highest readings (outer 4 only): SGP30_{highest_index + 1}")
+
+        label3.after(0, lambda: label3.config(
+            text=f"Highest: SGP30_{highest_index + 1}",
+            foreground="red"
+        ))
 
         highlight_led = sensor_to_led_map.get(highest_index)
 
@@ -170,8 +175,10 @@ def start_gui():
     )
     window.label2.pack(pady=(0, 10))  # Move expand=True to the second label
 
-    # Create a third label below the second one
-    window.label3 = tk.Label(
+    # Create a third label below the second one (This one will display the sensor with the highest readings)
+    global label3
+    
+    label3 = tk.Label(
         window,
         text="Smell", 
         foreground="gray",                      
@@ -179,7 +186,7 @@ def start_gui():
         font=("Helvetica", 56),                 
         justify="center"                         
     )
-    window.label3.pack(pady=(160, 0))  # Move expand=True to the second label
+    label3.pack(pady=(160, 0))  # Move expand=True to the second label
 
     exit_button = tk.Button(
         window,
