@@ -1,3 +1,5 @@
+import os
+import subprocess
 import time
 import adafruit_sgp30
 import bme680
@@ -276,5 +278,8 @@ start_gui()
 # Wait for the sensor thread to finish after GUI closes
 sensor_thread.join()
 print("Sensor thread stopped. Exiting cleanly.")
+
+# Trigger system shutdown
+subprocess.run(["sudo", "shutdown", "now"])
 
 ## MAIN == end ==
