@@ -7,6 +7,7 @@ import board
 import adafruit_tca9548a
 import tkinter as tk
 import threading
+import RPi.GPIO as GPIO
 from grove.i2c import Bus
 from rpi_ws281x import PixelStrip, Color
 from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
@@ -16,6 +17,8 @@ PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
 COUNT = 20  # For Grove - WS2813 RGB LED Ring - 20 LED total
 
 stop_event = threading.Event()
+
+shutdown = False  # Global shutdown flag
 
 co2_readings = []
 tvoc_readings = []
@@ -52,7 +55,7 @@ sensor_to_led_map = {
     3: 15,   # Sensor 3 → LED 15
 }
 
-bme680_sensor = None # later initialized in sensor_init()
+bme680_sensor = None # later initialized in program_init()
 
 def normalize(value, min_val, max_val):
     return max(0.0, min(1.0, (value - min_val) / (max_val - min_val)))
@@ -192,7 +195,7 @@ def start_gui():
 
     window.label4 = tk.Label(
         window,
-        text="Add smell here later",
+        text="Bind smell to this label",
         foreground="gray",                      
         background="white",                      
         font=("Helvetica", 80),                 
@@ -226,7 +229,7 @@ def on_closing():
 
     window.destroy()       # Close GUI
 
-def sensor_init():
+def program_init():
     global bme680_sensor
     # Sensor initialization
     # BME680 setup
@@ -260,13 +263,31 @@ def sensor_init():
     for sensor in sgp30_sensors:
         sensor.iaq_init()
 
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Shutdown trigger
+    GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Normal exit
+
     print ('Testing LED ring functionality with a color wipe animation.')
     colorWipe(strip, Color(0, 255, 0))  # Green wipe
 
+    # Register GPIO event detection
+    GPIO.add_event_detect(27, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
+    GPIO.add_event_detect(17, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
+
+def gpio_callback(channel):
+    global shutdown
+    if channel == 27:
+        print("GPIO 27 pressed – triggering shutdown.")
+        shutdown = True
+        window.after(0, on_closing)  # Exit via GUI
+    elif channel == 17:
+        print("GPIO 17 pressed – exiting app without shutdown.")
+        shutdown = False
+        window.after(0, on_closing)
 ## MAIN == start ==
 
 # Initialize sensors
-sensor_init()
+program_init()
 
 # Start the sensor loop in a separate thread
 sensor_thread = threading.Thread(target=sensor_loop, daemon=True)
@@ -279,7 +300,11 @@ start_gui()
 sensor_thread.join()
 print("Sensor thread stopped. Exiting cleanly.")
 
-# Trigger system shutdown
-subprocess.run(["sudo", "shutdown", "now"])
+if shutdown:
+    print("Shutdown flag is set. Closing app and shutting down...")
+    time.sleep(2)  # Delay before shutdown
+    subprocess.run(["sudo", "shutdown", "now"])
+else:
+    print("Shutdown not triggered. Closing app and staying powered on.")
 
 ## MAIN == end ==
