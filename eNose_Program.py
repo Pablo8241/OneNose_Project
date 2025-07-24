@@ -163,7 +163,7 @@ def start_gui():
         text="OneNose",           # The text to display
         foreground="black",           # Text color
         background="white",           # Background color
-        font=("Helvetica", 30, "bold"), # Font family, size, and style
+        font=("Helvetica", 60, "bold"), # Font family, size, and style
         anchor="n",                   # Anchor text to the top center ('n' = north)
         justify="center"              # Center the text horizontally
     )
@@ -175,7 +175,7 @@ def start_gui():
         text="Directional Electronic Nose", 
         foreground="gray",                       
         background="white",                   
-        font=("Helvetica", 30),               
+        font=("Helvetica", 40),               
         justify="center"                       
     )
     window.label2.pack(pady=(0, 4))  # Move expand=True to the second label -- pady(characters above, characters below)
@@ -198,20 +198,20 @@ def start_gui():
         text="Bind smell to this label",
         foreground="gray",                      
         background="white",                      
-        font=("Helvetica", 10),                 
+        font=("Helvetica", 20),                 
         justify="center"                         
     )
     window.label4.pack(pady=(2, 0))  # Move expand=True to the second label
 
-    exit_button = tk.Button(
-        window,
-        text="Exit",
-        font=("Helvetica", 30),
-        bg="red",
-        fg="white",
-        command=on_closing
-    )
-    exit_button.pack(side="bottom", pady=10)
+    # exit_button = tk.Button(
+    #     window,
+    #     text="Exit",
+    #     font=("Helvetica", 30),
+    #     bg="red",
+    #     fg="white",
+    #     command=on_closing
+    # )
+    # exit_button.pack(side="bottom", pady=10)
 
     window.mainloop()  # Start the Tkinter main loop
 
