@@ -267,15 +267,22 @@ def program_init():
         sensor.iaq_init()
 
     GPIO.setmode(GPIO.BCM)
-    # GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Shutdown trigger
+    GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Shutdown trigger
     GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Normal exit
 
     print ('Testing LED ring functionality with a color wipe animation.')
     colorWipe(strip, Color(0, 255, 0))  # Green wipe
 
     # Register GPIO event detection
-    # GPIO.add_event_detect(27, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
-    GPIO.add_event_detect(17, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
+    try:
+        GPIO.add_event_detect(27, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
+    except RuntimeError as e:
+        print(f"Failed to add event detect on GPIO 27: {e}")
+
+    try:
+        GPIO.add_event_detect(17, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
+    except RuntimeError as e:
+        print(f"Failed to add event detect on GPIO 17: {e}")
 
 def gpio_callback(channel):
     global shutdown
