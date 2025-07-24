@@ -174,7 +174,7 @@ def start_gui():
         window,
         text="Directional Electronic Nose", 
         foreground="gray",                       
-        background="white",                   
+        background=window["bg"],                   
         font=("Helvetica", 40),               
         justify="center"                       
     )
@@ -187,7 +187,7 @@ def start_gui():
         window,
         text="Awaiting sensor data...",  # Initial text
         foreground="gray",                      
-        background="white",                      
+        background=window["bg"],                      
         font=("Helvetica", 40),                 
         justify="center"                         
     )
@@ -197,7 +197,7 @@ def start_gui():
         window,
         text="Bind smell to this label",
         foreground="gray",                      
-        background="white",                      
+        background=window["bg"],                      
         font=("Helvetica", 20),                 
         justify="center"                         
     )
