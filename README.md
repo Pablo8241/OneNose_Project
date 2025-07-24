@@ -2,7 +2,7 @@
 
 ## Description
 
-The Directional eNose is an electronic nose system designed to detect and identify the direction of odors and chemical substances in the environment. The system uses multiple SGP30 air quality sensors arranged in a circular pattern to detect CO2 and TVOC (Total Volatile Organic Compounds) concentrations from different directions. It has the functionality of being able to detect where a smell is coming from and display the direction using an LED ring as indicator.
+The Directional eNose is an electronic nose system designed to detect and identify the direction of odors and chemical substances in the environment. The system uses multiple SGP30 air quality sensors arranged in a circular pattern to detect CO2 and TVOC (Total Volatile Organic Compounds) concentrations from different directions. It has the functionality of being able to detect where a smell is coming from and display the direction using an LED ring as indicator. In addition to that it has a BME680 and 6 functionalised gas sensors used for detecting the type of odor.
 
 The main program (`eNose_Program.py`) continuously monitors all sensors and environmental conditions, providing real-time data on air quality measurements and environmental parameters.
 
@@ -13,6 +13,7 @@ The main program (`eNose_Program.py`) continuously monitors all sensors and envi
 - **2x TCA9548A I2C Multiplexers** - Managing multiple sensors with same I2C address
 - **1x WS2813 RGB LED Ring (20 LEDs)** - Directional indication display
 - **Raspberry Pi with Grove Base Hat** - Main processing unit
+- **Adafruit PiTFT Plus 320x240 2.8" TFT** - Display for the GUI
 
 ## Device I2C Addresses
 
@@ -32,5 +33,8 @@ The main program (`eNose_Program.py`) continuously monitors all sensors and envi
 3. **Inner SGP30 Sensors**: Connect the inner 6 SGP30 sensors starting from bottom left, going clockwise to IC4-IC7 on the MUX to with a default address 0x70 and the rest to IC0-IC1 on the MUX with address 0x71 respectively.
 
 4. **BME680 and LED Ring**: Connect the BME680 to any open I2C port on the eNose. Connect the RGB ring GND to any ground pin on the base hat Raspberry Pi extension board, power to the 5V power supply pin and the SIG pin to GPIO 12 (pin 32 on the Raspberry Pi header).
+
+5. **Display**: The display uses the hardware SPI pins (SCK, MOSI, MISO, CE0, CE1) as well as GPIO
+#25 and #24. These are connected using female-to-female jumper cables from the display directly to the pins of the base hat.
 
 5. **Final Assembly**: You can now screw the top cover in place.
