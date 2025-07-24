@@ -231,6 +231,9 @@ def on_closing():
 
 def program_init():
     global bme680_sensor
+
+    GPIO.cleanup()
+    
     # Sensor initialization
     # BME680 setup
     # Initialize the BME680 sensor
