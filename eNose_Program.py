@@ -302,9 +302,17 @@ print("Sensor thread stopped. Exiting cleanly.")
 
 if shutdown:
     print("Shutdown flag is set. Closing app and shutting down...")
+    label3.after(0, lambda: label3.config(
+            text=f"Closing app and shutting down...",
+            foreground="red"
+        ))
     time.sleep(2)  # Delay before shutdown
     subprocess.run(["sudo", "shutdown", "now"])
 else:
+    label3.after(0, lambda: label3.config(
+            text=f"Closing app without shutdown...",
+            foreground="red"
+        ))
     print("Shutdown not triggered. Closing app and staying powered on.")
 
 ## MAIN == end ==
