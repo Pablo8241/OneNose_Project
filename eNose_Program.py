@@ -191,7 +191,7 @@ def start_gui():
         font=("Helvetica", 45),                 
         justify="center"                         
     )
-    label3.pack(pady=(10, 0))  # Move expand=True to the second label
+    label3.pack(pady=(30, 0))  # Move expand=True to the second label
 
     window.label4 = tk.Label(
         window,
