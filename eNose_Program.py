@@ -175,7 +175,7 @@ def start_gui():
         text="Directional Electronic Nose", 
         foreground="gray",                       
         background=window["bg"],                   
-        font=("Helvetica", 40),               
+        font=("Helvetica", 35),               
         justify="center"                       
     )
     window.label2.pack(pady=(0, 4))  # Move expand=True to the second label -- pady(characters above, characters below)
@@ -188,10 +188,10 @@ def start_gui():
         text="Awaiting sensor data...",  # Initial text
         foreground="gray",                      
         background=window["bg"],                      
-        font=("Helvetica", 40),                 
+        font=("Helvetica", 45),                 
         justify="center"                         
     )
-    label3.pack(pady=(5, 0))  # Move expand=True to the second label
+    label3.pack(pady=(10, 0))  # Move expand=True to the second label
 
     window.label4 = tk.Label(
         window,
