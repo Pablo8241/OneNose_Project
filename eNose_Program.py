@@ -163,11 +163,11 @@ def start_gui():
         text="OneNose",           # The text to display
         foreground="black",           # Text color
         background="white",           # Background color
-        font=("Helvetica", 80, "bold"), # Font family, size, and style
+        font=("Helvetica", 30, "bold"), # Font family, size, and style
         anchor="n",                   # Anchor text to the top center ('n' = north)
         justify="center"              # Center the text horizontally
     )
-    window.label.pack(pady=(10))  # Add some padding below the first label
+    window.label.pack(pady=(2))  # Add some padding below the first label
 
     # Create a second label below the first one
     window.label2 = tk.Label(
@@ -274,15 +274,8 @@ def program_init():
     colorWipe(strip, Color(0, 255, 0))  # Green wipe
 
     # Register GPIO event detection
-    try:
-        GPIO.add_event_detect(27, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
-    except RuntimeError as e:
-        print(f"Failed to add event detect on GPIO 27: {e}")
-
-    try:
-        GPIO.add_event_detect(17, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
-    except RuntimeError as e:
-        print(f"Failed to add event detect on GPIO 17: {e}")
+    GPIO.add_event_detect(27, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
+    GPIO.add_event_detect(17, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
 
 def gpio_callback(channel):
     global shutdown
