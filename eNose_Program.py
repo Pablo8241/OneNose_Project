@@ -269,13 +269,15 @@ def program_init():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Shutdown trigger
     GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Normal exit
+    button_thread = threading.Thread(target=button_polling_loop, daemon=True)
+    button_thread.start()
 
     print ('Testing LED ring functionality with a color wipe animation.')
     colorWipe(strip, Color(0, 255, 0))  # Green wipe
 
     # Register GPIO event detection
-    GPIO.add_event_detect(27, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
-    GPIO.add_event_detect(17, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
+    # GPIO.add_event_detect(27, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
+    # GPIO.add_event_detect(17, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
 
 def gpio_callback(channel):
     global shutdown
@@ -288,6 +290,31 @@ def gpio_callback(channel):
         shutdown = False
         window.after(0, on_closing)
 ## MAIN == start ==
+
+def button_polling_loop():
+    global shutdown
+
+    prev_state_27 = GPIO.input(27)
+    prev_state_17 = GPIO.input(17)
+
+    while not stop_event.is_set():
+        curr_state_27 = GPIO.input(27)
+        curr_state_17 = GPIO.input(17)
+
+        if prev_state_27 == GPIO.HIGH and curr_state_27 == GPIO.LOW:
+            print("GPIO 27 pressed – triggering shutdown.")
+            shutdown = True
+            window.after(0, on_closing)
+
+        if prev_state_17 == GPIO.HIGH and curr_state_17 == GPIO.LOW:
+            print("GPIO 17 pressed – exiting app without shutdown.")
+            shutdown = False
+            window.after(0, on_closing)
+
+        prev_state_27 = curr_state_27
+        prev_state_17 = curr_state_17
+
+        time.sleep(0.05)  # 50ms polling delay
 
 # Initialize sensors
 program_init()
