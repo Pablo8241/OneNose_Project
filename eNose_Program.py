@@ -175,10 +175,10 @@ def start_gui():
         text="Directional Electronic Nose", 
         foreground="gray",                       
         background="white",                   
-        font=("Helvetica", 50),               
+        font=("Helvetica", 30),               
         justify="center"                       
     )
-    window.label2.pack(pady=(0, 10))  # Move expand=True to the second label
+    window.label2.pack(pady=(0, 4))  # Move expand=True to the second label -- pady(characters above, characters below)
 
     # Create a third label below the second one (This one will display the sensor with the highest readings)
     global label3
@@ -188,20 +188,20 @@ def start_gui():
         text="Awaiting sensor data...",  # Initial text
         foreground="gray",                      
         background="white",                      
-        font=("Helvetica", 80),                 
+        font=("Helvetica", 35),                 
         justify="center"                         
     )
-    label3.pack(pady=(160, 0))  # Move expand=True to the second label
+    label3.pack(pady=(5, 0))  # Move expand=True to the second label
 
     window.label4 = tk.Label(
         window,
         text="Bind smell to this label",
         foreground="gray",                      
         background="white",                      
-        font=("Helvetica", 80),                 
+        font=("Helvetica", 10),                 
         justify="center"                         
     )
-    window.label4.pack(pady=(20, 0))  # Move expand=True to the second label
+    window.label4.pack(pady=(2, 0))  # Move expand=True to the second label
 
     exit_button = tk.Button(
         window,
