@@ -26,15 +26,15 @@ The main program (`eNose_Program.py`) continuously monitors all sensors and envi
 
 ## Hardware Setup Instructions
 
-1. **Initial Positioning**: First make sure you are looking at the eNose with the USB ports on the Raspberry Pi pointing towards you. Second make sure the top cover is placed in such way that the BME680 port points towards you. Do not screw the top cover in place yet.
+1. **Initial Positioning**: First make sure the top cover is positioned in such way that the BME680 port points towards you. Do not screw the top cover in place yet.
 
-2. **Outer SGP30 Sensors**: Connect the 4 outer SGP30 sensors starting from bottom left, going clockwise to IC0-IC3 respectively.
+2. **Outer SGP30 Sensors**: Connect the 4 outer SGP30 sensors starting from bottom left, going clockwise to IC0-IC3 of the MUX with a default address 0x70.
 
-3. **Inner SGP30 Sensors**: Connect the inner 6 SGP30 sensors starting from bottom left, going clockwise to IC4-IC7 on the MUX to with a default address 0x70 and the rest to IC0-IC1 on the MUX with address 0x71 respectively.
+3. **Inner SGP30 Sensors**: Connect the inner 6 SGP30 sensors starting from bottom left, going clockwise to IC4-IC7 on the MUX with the default address and the rest to IC0-IC1 on the MUX with address 0x71 respectively.
 
 4. **BME680 and LED Ring**: Connect the BME680 to any open I2C port on the eNose. Connect the RGB ring GND to any ground pin on the base hat Raspberry Pi extension board, power to the 5V power supply pin and the SIG pin to GPIO 12 (pin 32 on the Raspberry Pi header).
 
 5. **Display**: The display uses the hardware SPI pins (SCK, MOSI, MISO, CE0, CE1) as well as GPIO
-#25 and #24. These are connected using female-to-female jumper cables from the display directly to the pins of the base hat.
+#25 and #24. GPIO #17 and #27 are used for two of the 4 buttons on the display and serve as buttons to turn off the Raspberry Pi or close the GUI. All pins are connected using female-to-female jumper cables from the display directly to the pins of the base hat.
 
 5. **Final Assembly**: You can now screw the top cover in place.
