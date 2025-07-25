@@ -35,6 +35,6 @@ The main program (`eNose_Program.py`) continuously monitors all sensors and envi
 4. **BME680 and LED Ring**: Connect the BME680 to any open I2C port on the eNose. Connect the RGB ring GND to any ground pin on the base hat Raspberry Pi extension board, power to the 5V power supply pin and the SIG pin to GPIO 12 (pin 32 on the Raspberry Pi header).
 
 5. **Display**: The display uses the hardware SPI pins (SCK, MOSI, MISO, CE0, CE1) as well as GPIO
-#25 and #24. GPIO #17 and #27 are used for two of the 4 buttons on the display and serve as buttons to turn off the Raspberry Pi or close the GUI. All pins are connected using female-to-female jumper cables from the display directly to the pins of the base hat.
+#25 and #24. GPIO #17 and #27 are used for two of the 4 buttons on the display and serve as buttons to turn off the Raspberry Pi or close the GUI. All pins are connected using female-to-female jumper cables from the display directly to the pins of the base hat apart from the power input, which is taken directly from the 5V power supply.
 
 5. **Final Assembly**: You can now screw the top cover in place.
