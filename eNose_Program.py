@@ -12,6 +12,8 @@ from grove.i2c import Bus
 from rpi_ws281x import PixelStrip, Color
 from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
 
+from enose_functions import normalize, colorWipe
+
 # Define a bias to rotate LED direction to match sensor layout
 PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
 COUNT = 20  # For Grove - WS2813 RGB LED Ring - 20 LED total
@@ -56,17 +58,6 @@ sensor_to_led_map = {
 }
 
 bme680_sensor = None # later initialized in program_init()
-
-def normalize(value, min_val, max_val):
-    return max(0.0, min(1.0, (value - min_val) / (max_val - min_val)))
-
-# Define LED animation function
-def colorWipe(strip, color, wait_ms=50):
-    """Wipe color across display a pixel at a time."""
-    for i in range(strip.numPixels()):
-        strip.setPixelColor(i, color)
-        strip.show()
-        time.sleep(wait_ms/1000.0)
 
 # Reading sensor data and adjusting LED colors
 def sensor_loop():
