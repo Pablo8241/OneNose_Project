@@ -327,7 +327,7 @@ sensor_thread.start()
 start_gui()
 
 # Wait for the sensor thread to finish after GUI closes
-sensor_thread.join()
+sensor_thread.join(timeout=3)  # Wait for up to 3 seconds for the thread to finish
 
 if sensor_thread.is_alive():
     print("Sensor thread didn't exit in time. Forcing exit.")
