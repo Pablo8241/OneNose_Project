@@ -16,12 +16,12 @@ from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
 PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
 COUNT = 20  # For Grove - WS2813 RGB LED Ring - 20 LED total
 
-stop_event = threading.Event()
+stop_event = threading.Event() # thread-safe flag
 
 shutdown = False  # Global shutdown flag
 
-co2_readings = []
-tvoc_readings = []
+h2_readings = []
+ethanol_readings = []
 combined_scores = []
 
 # Grove WS2813 RGB LED Strip setup
@@ -71,33 +71,34 @@ def colorWipe(strip, color, wait_ms=50):
 # Reading sensor data and adjusting LED colors
 def sensor_loop():
     while not stop_event.is_set():
-        co2_readings.clear()
-        tvoc_readings.clear()
+        h2_readings.clear()
+        ethanol_readings.clear()
         combined_scores.clear()
 
         # Read SGP30 sensor data
         for i, sensor in enumerate(sgp30_sensors):
             try:
-                sensor.iaq_measure()  # Must call this every second
+                # Use get_raw_data() instead of iaq_measure()
+                raw = sensor.get_raw_data()
 
-                co2 = sensor.eCO2
-                tvoc = sensor.TVOC
+                ethanol = raw.ethanol
+                h2 = raw.h2
 
-                co2_readings.append(co2)
-                tvoc_readings.append(tvoc)
+                h2_readings.append(h2)
+                ethanol_readings.append(ethanol)
 
-                # Normalize (you can adjust these min/max bounds based on your expected range)
-                norm_co2 = normalize(co2, 400, 60000)  # Normalizing CO2 from 400ppm to 60000ppm
-                norm_tvoc = normalize(tvoc, 0, 60000)  # Normalizing TVOC from 0ppb to 60000ppb
-                score = norm_co2 + norm_tvoc  # Simple combined score
+                # Normalize or combine scores as needed
+                norm_ethanol = normalize(ethanol, 1000, 50000)
+                norm_h2 = normalize(h2, 1000, 50000)
+                score = norm_ethanol + norm_h2
 
                 combined_scores.append(score)
+                
             except Exception as e:
                 print(f"Error reading SGP30_{i+1}: {e}")
-
-                co2_readings.append(None)
-                tvoc_readings.append(None)
-                combined_scores.append(-1)  # Force it to be lowest
+                h2_readings.append(None)
+                ethanol_readings.append(None)
+                combined_scores.append(-1)
 
         # Now find which sensor has the highest readings for determining the direction of the smell
         # --- Only use outer 4 sensors (0 to 3) for scoring and LED ---
@@ -126,9 +127,9 @@ def sensor_loop():
 
         # Print SGP30 sensor data
         print("-" * 50)
-        for i, (co2, tvoc) in enumerate(zip(co2_readings, tvoc_readings)):
-            if co2 is not None and tvoc is not None:
-                print(f"SGP30_{i+1}: CO2={co2}ppm, TVOC={tvoc}ppb")
+        for i, (h2, ethanol) in enumerate(zip(h2_readings, ethanol_readings)):
+            if h2 is not None and ethanol is not None:
+                print(f"SGP30_{i+1}: H2={h2}ppm, Ethanol={ethanol}ppm")
             else:
                 print(f"SGP30_{i+1}: Error reading sensor")
         print("-" * 50)
@@ -147,7 +148,7 @@ def sensor_loop():
             else:
                 print(output)
 
-        time.sleep(1) # Wait for 1 second before the next reading (this is the minimum required for SGP30)
+        time.sleep(0.3) # Wait before the next reading (multiplexer and sensors need some time)
 
 def start_gui():
     global window
@@ -202,16 +203,6 @@ def start_gui():
         justify="center"                         
     )
     window.label4.pack(pady=(2, 0))  # Move expand=True to the second label
-
-    # exit_button = tk.Button(
-    #     window,
-    #     text="Exit",
-    #     font=("Helvetica", 30),
-    #     bg="red",
-    #     fg="white",
-    #     command=on_closing
-    # )
-    # exit_button.pack(side="bottom", pady=10)
 
     window.mainloop()  # Start the Tkinter main loop
 
@@ -275,22 +266,6 @@ def program_init():
     print ('Testing LED ring functionality with a color wipe animation.')
     colorWipe(strip, Color(0, 255, 0))  # Green wipe
 
-    # Register GPIO event detection
-    # GPIO.add_event_detect(27, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
-    # GPIO.add_event_detect(17, GPIO.FALLING, callback=gpio_callback, bouncetime=300)
-
-def gpio_callback(channel):
-    global shutdown
-    if channel == 27:
-        print("GPIO 27 pressed – triggering shutdown.")
-        shutdown = True
-        window.after(0, on_closing)  # Exit via GUI
-    elif channel == 17:
-        print("GPIO 17 pressed – exiting app without shutdown.")
-        shutdown = False
-        window.after(0, on_closing)
-## MAIN == start ==
-
 def button_polling_loop():
     global shutdown
 
@@ -316,6 +291,7 @@ def button_polling_loop():
 
         time.sleep(0.05)  # 50ms polling delay
 
+## MAIN == start ==
 # Initialize sensors
 program_init()
 
@@ -327,7 +303,7 @@ sensor_thread.start()
 start_gui()
 
 # Wait for the sensor thread to finish after GUI closes
-sensor_thread.join(timeout=3)  # Wait for up to 3 seconds for the thread to finish
+sensor_thread.join(timeout=3)  # Wait for up to 3 seconds for the thread to finish, if it doesn't, just go on
 
 if sensor_thread.is_alive():
     print("Sensor thread didn't exit in time. Forcing exit.")
