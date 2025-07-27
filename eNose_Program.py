@@ -20,8 +20,8 @@ stop_event = threading.Event() # thread-safe flag
 
 shutdown = False  # Global shutdown flag
 
-h2_readings = []
-ethanol_readings = []
+co2_readings = []
+tvoc_readings = []
 combined_scores = []
 
 # Grove WS2813 RGB LED Strip setup
@@ -71,34 +71,33 @@ def colorWipe(strip, color, wait_ms=50):
 # Reading sensor data and adjusting LED colors
 def sensor_loop():
     while not stop_event.is_set():
-        h2_readings.clear()
-        ethanol_readings.clear()
+        co2_readings.clear()
+        tvoc_readings.clear()
         combined_scores.clear()
 
         # Read SGP30 sensor data
         for i, sensor in enumerate(sgp30_sensors):
             try:
-                # Use get_raw_data() instead of iaq_measure()
-                raw = sensor.get_raw_data()
+                sensor.iaq_measure()  # Must call this every second
 
-                ethanol = raw.ethanol
-                h2 = raw.h2
+                co2 = sensor.eCO2
+                tvoc = sensor.TVOC
 
-                h2_readings.append(h2)
-                ethanol_readings.append(ethanol)
+                co2_readings.append(co2)
+                tvoc_readings.append(tvoc)
 
-                # Normalize or combine scores as needed
-                norm_ethanol = normalize(ethanol, 1000, 50000)
-                norm_h2 = normalize(h2, 1000, 50000)
-                score = norm_ethanol + norm_h2
+                # Normalize (you can adjust these min/max bounds based on your expected range)
+                norm_co2 = normalize(co2, 400, 60000)  # Normalizing CO2 from 400ppm to 60000ppm
+                norm_tvoc = normalize(tvoc, 0, 60000)  # Normalizing TVOC from 0ppb to 60000ppb
+                score = norm_co2 + norm_tvoc  # Simple combined score
 
                 combined_scores.append(score)
-                
             except Exception as e:
                 print(f"Error reading SGP30_{i+1}: {e}")
-                h2_readings.append(None)
-                ethanol_readings.append(None)
-                combined_scores.append(-1)
+
+                co2_readings.append(None)
+                tvoc_readings.append(None)
+                combined_scores.append(-1)  # Force it to be lowest
 
         # Now find which sensor has the highest readings for determining the direction of the smell
         # --- Only use outer 4 sensors (0 to 3) for scoring and LED ---
@@ -127,9 +126,9 @@ def sensor_loop():
 
         # Print SGP30 sensor data
         print("-" * 50)
-        for i, (h2, ethanol) in enumerate(zip(h2_readings, ethanol_readings)):
-            if h2 is not None and ethanol is not None:
-                print(f"SGP30_{i+1}: H2={h2}ppm, Ethanol={ethanol}ppm")
+        for i, (co2, tvoc) in enumerate(zip(co2_readings, tvoc_readings)):
+            if co2 is not None and tvoc is not None:
+                print(f"SGP30_{i+1}: CO2={co2}ppm, TVOC={tvoc}ppb")
             else:
                 print(f"SGP30_{i+1}: Error reading sensor")
         print("-" * 50)
@@ -148,7 +147,7 @@ def sensor_loop():
             else:
                 print(output)
 
-        time.sleep(0.3) # Wait before the next reading (multiplexer and sensors need some time)
+        time.sleep(1) # Wait for 1 second before the next reading (this is the minimum required for SGP30)
 
 def start_gui():
     global window
