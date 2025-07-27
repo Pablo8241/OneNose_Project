@@ -258,15 +258,14 @@ def program_init():
     colorWipe(strip, Color(0, 255, 0))  # Green wipe
 
 ## MAIN == start ==
+# Start the GUI (main thread)
+start_gui()
 # Initialize sensors
 program_init()
 
 # Start the sensor loop in a separate thread
 sensor_thread = threading.Thread(target=sensor_loop, daemon=True)
 sensor_thread.start()
-
-# Start the GUI (main thread)
-start_gui()
 
 # Wait for the sensor thread to finish after GUI closes
 sensor_thread.join(timeout=3)  # Wait for up to 3 seconds for the thread to finish, if it doesn't, just go on
