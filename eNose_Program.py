@@ -328,7 +328,11 @@ start_gui()
 
 # Wait for the sensor thread to finish after GUI closes
 sensor_thread.join()
-print("Sensor thread stopped. Exiting cleanly.")
+
+if sensor_thread.is_alive():
+    print("Sensor thread didn't exit in time. Forcing exit.")
+else:
+    print("Sensor thread stopped. Exiting cleanly.")
 
 if shutdown:
     print("Shutdown flag is set. Closing app and shutting down...")
