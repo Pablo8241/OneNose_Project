@@ -12,7 +12,7 @@ from grove.i2c import Bus
 from rpi_ws281x import PixelStrip, Color
 from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
 
-from enose_functions import normalize, colorWipe
+from enose_functions import normalize, colorWipe, button_polling_loop
 
 # Define a bias to rotate LED direction to match sensor layout
 PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
@@ -250,36 +250,12 @@ def program_init():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Shutdown trigger
     GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Normal exit
-    button_thread = threading.Thread(target=button_polling_loop, daemon=True)
+    shutdown_flag = [False]  # mutable list to allow updates inside thread
+    button_thread = threading.Thread(target=button_polling_loop, args=(stop_event, window, shutdown_flag, on_closing), daemon=True)
     button_thread.start()
 
     print ('Testing LED ring functionality with a color wipe animation.')
     colorWipe(strip, Color(0, 255, 0))  # Green wipe
-
-def button_polling_loop():
-    global shutdown
-
-    prev_state_27 = GPIO.input(27)
-    prev_state_17 = GPIO.input(17)
-
-    while not stop_event.is_set():
-        curr_state_27 = GPIO.input(27)
-        curr_state_17 = GPIO.input(17)
-
-        if prev_state_27 == GPIO.HIGH and curr_state_27 == GPIO.LOW:
-            print("GPIO 27 pressed – triggering shutdown.")
-            shutdown = True
-            window.after(0, on_closing)
-
-        if prev_state_17 == GPIO.HIGH and curr_state_17 == GPIO.LOW:
-            print("GPIO 17 pressed – exiting app without shutdown.")
-            shutdown = False
-            window.after(0, on_closing)
-
-        prev_state_27 = curr_state_27
-        prev_state_17 = curr_state_17
-
-        time.sleep(0.05)  # 50ms polling delay
 
 ## MAIN == start ==
 # Initialize sensors
