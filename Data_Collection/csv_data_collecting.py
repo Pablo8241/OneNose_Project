@@ -24,9 +24,6 @@ def input_listener():
             stop_requested = True
             break
 
-# Start background thread to watch for 'stop'
-threading.Thread(target=input_listener, daemon=True).start()
-
 # ----------------------------
 # Sensor Initialization
 # ----------------------------
@@ -70,7 +67,6 @@ bme680_sensor.set_gas_heater_temperature(320)
 bme680_sensor.set_gas_heater_duration(150)
 bme680_sensor.select_gas_heater_profile(0)
 
-print("Now asking for label...")
 # ----------------------------
 # Ask user for label interactively
 # ----------------------------
@@ -78,6 +74,9 @@ label = input("Enter label: ").strip()
 if not label:
     print("Label cannot be empty.")
     sys.exit(1)
+
+# Start background thread to watch for 'stop'
+threading.Thread(target=input_listener, daemon=True).start()
 
 # ----------------------------
 # CSV header
