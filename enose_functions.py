@@ -1,6 +1,5 @@
 import time
 from rpi_ws281x import Color
-import RPi.GPIO as GPIO
 
 def normalize(value, min_val, max_val):
     return max(0.0, min(1.0, (value - min_val) / (max_val - min_val)))
