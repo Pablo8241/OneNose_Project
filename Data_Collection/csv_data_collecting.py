@@ -30,10 +30,12 @@ threading.Thread(target=input_listener, daemon=True).start()
 # ----------------------------
 # Sensor Initialization
 # ----------------------------
+print("Initializing I2C and multiplexers...")
 i2c = board.I2C()
 mux1 = adafruit_tca9548a.TCA9548A(i2c, address=0x70)
 mux2 = adafruit_tca9548a.TCA9548A(i2c, address=0x71)
 
+print("Initializing SGP30 sensors...")
 sgp30_sensors = [
     adafruit_sgp30.Adafruit_SGP30(mux1[0]),  # Index 0 = SGP30_1
     adafruit_sgp30.Adafruit_SGP30(mux1[1]),
@@ -52,6 +54,7 @@ used_sgp_sensors = sgp30_sensors[4:10]
 for sensor in used_sgp_sensors:
     sensor.iaq_init()
 
+print("Initializing BME680...")
 # BME680 setup
 try:
     bme680_sensor = bme680.BME680(bme680.I2C_ADDR_PRIMARY)
