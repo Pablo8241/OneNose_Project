@@ -1,49 +1,62 @@
 import os
 import time
 import csv
-import sys
 import board
+import sys
+import threading
+from datetime import datetime
 import adafruit_tca9548a
 import adafruit_sgp30
 import bme680
-from datetime import datetime
 
-# Navigate to directory with this script
-# run with "python csv_data_collecting.py label"
+# Make sure to navigate to the correct environment with all needed packages installed.
+# run script with "/home/pablo/appenv/bin/python /home/pablo/OneNose_Project/Data_Collection/csv_datacollecting.py"
 
-# ------------------------------
-# 🏷️ Command-line label argument
-# ------------------------------
-if len(sys.argv) != 2:
-    print("Usage: python script.py <label>")
+# Global stop flag
+stop_requested = False
+
+def input_listener():
+    global stop_requested
+    while True:
+        user_input = input()
+        if user_input.strip().lower() == 'stop':
+            print("[INFO] Stop requested. Finishing current file...")
+            stop_requested = True
+            break
+
+# ----------------------------
+# Ask user for label interactively
+# ----------------------------
+label = input("Enter label: ").strip()
+if not label:
+    print("Label cannot be empty.")
     sys.exit(1)
 
-label = sys.argv[1]
+# Start background thread to watch for 'stop'
+threading.Thread(target=input_listener, daemon=True).start()
 
-# ------------------------------
-# 🔌 I2C and sensor initialization
-# ------------------------------
+# ----------------------------
+# Sensor Initialization
+# ----------------------------
 i2c = board.I2C()
 mux1 = adafruit_tca9548a.TCA9548A(i2c, address=0x70)
 mux2 = adafruit_tca9548a.TCA9548A(i2c, address=0x71)
 
-# SGP30 sensor list — sensors 1 to 10
 sgp30_sensors = [
     adafruit_sgp30.Adafruit_SGP30(mux1[0]),  # Index 0 = SGP30_1
-    adafruit_sgp30.Adafruit_SGP30(mux1[1]),  # Index 1 = SGP30_2
+    adafruit_sgp30.Adafruit_SGP30(mux1[1]),
     adafruit_sgp30.Adafruit_SGP30(mux1[2]),
     adafruit_sgp30.Adafruit_SGP30(mux1[3]),
-    adafruit_sgp30.Adafruit_SGP30(mux1[4]),  # Index 4 = SGP30_5
+    adafruit_sgp30.Adafruit_SGP30(mux1[4]),
     adafruit_sgp30.Adafruit_SGP30(mux1[5]),
     adafruit_sgp30.Adafruit_SGP30(mux1[6]),
     adafruit_sgp30.Adafruit_SGP30(mux1[7]),
     adafruit_sgp30.Adafruit_SGP30(mux2[0]),
-    adafruit_sgp30.Adafruit_SGP30(mux2[1])   # Index 9 = SGP30_10
+    adafruit_sgp30.Adafruit_SGP30(mux2[1]),
 ]
 
-# Only use sensors 5 to 10 → indexes 4 to 9
-used_sgp_sensors = sgp30_sensors[4:10]  # Python slice includes start, excludes end (i.e., 4 to 9)
-
+# Only use SGP30 sensors 5 to 10 (index 4 to 9)
+used_sgp_sensors = sgp30_sensors[4:10]
 for sensor in used_sgp_sensors:
     sensor.iaq_init()
 
@@ -62,40 +75,34 @@ bme680_sensor.set_gas_heater_temperature(320)
 bme680_sensor.set_gas_heater_duration(150)
 bme680_sensor.select_gas_heater_profile(0)
 
-# ------------------------------
-# 📁 CSV Header Setup
-# ------------------------------
+# ----------------------------
+# CSV header
+# ----------------------------
 os.makedirs("Data", exist_ok=True)
 
 headers = ['timestamp', 'BME680_temp', 'BME680_pressure', 'BME680_humidity', 'BME680_gas']
-for i in range(5, 11):  # Sensors 5 to 10 (inclusive)
+for i in range(5, 11):
     headers.append(f'SGP30_{i}_CO2')
     headers.append(f'SGP30_{i}_TVOC')
 
-# ------------------------------
-# ⏱️ Main Data Collection Loop
-# ------------------------------
-print("Starting data collection... Press Ctrl+C to stop.")
+# ----------------------------
+# Main Loop
+# ----------------------------
+print("[INFO] Starting data collection. Type 'stop' and press Enter to stop after current file.")
 
 try:
-    while True:
-        # Start time of 10-second block
-        block_start = time.time()
-
-        # Generate new CSV filename every 10 seconds
+    while not stop_requested:
         timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"Data/{label}_{timestamp_str}.csv"
-
         with open(filename, mode='w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(headers)
 
-            # Loop to collect 10 readings, one per second
             for _ in range(10):
-                current_time = time.strftime('%Y-%m-%d %H:%M:%S')
-                row = [current_time]
+                loop_start = time.time()
+                row = [time.strftime('%Y-%m-%d %H:%M:%S')]
 
-                # BME680 data
+                # BME680
                 if bme680_sensor.get_sensor_data():
                     temp = round(bme680_sensor.data.temperature, 2)
                     press = round(bme680_sensor.data.pressure, 2)
@@ -106,7 +113,7 @@ try:
 
                 row += [temp, press, hum, gas]
 
-                # SGP30 readings (sensors 5 to 10)
+                # SGP30 sensors 5 to 10
                 for sensor in used_sgp_sensors:
                     try:
                         sensor.iaq_measure()
@@ -115,11 +122,12 @@ try:
                         row += [None, None]
 
                 writer.writerow(row)
-                time.sleep(1)  # Wait 1 second
+
+                elapsed = time.time() - loop_start
+                if elapsed < 1.0:
+                    time.sleep(1.0 - elapsed)
 
 except KeyboardInterrupt:
-    print("\nInterrupted. Finishing current 10-second block before exiting.")
-    # No action needed — current file finishes in inner loop
-    pass
+    print("\n[INFO] Ctrl+C detected. Finishing current file and exiting...")
 
-print("Data collection stopped.")
+print("[INFO] Data collection stopped.")
