@@ -24,14 +24,6 @@ def input_listener():
             stop_requested = True
             break
 
-# ----------------------------
-# Ask user for label interactively
-# ----------------------------
-label = input("Enter label: ").strip()
-if not label:
-    print("Label cannot be empty.")
-    sys.exit(1)
-
 # Start background thread to watch for 'stop'
 threading.Thread(target=input_listener, daemon=True).start()
 
@@ -76,6 +68,14 @@ bme680_sensor.set_gas_heater_duration(150)
 bme680_sensor.select_gas_heater_profile(0)
 
 # ----------------------------
+# Ask user for label interactively
+# ----------------------------
+label = input("Enter label: ").strip()
+if not label:
+    print("Label cannot be empty.")
+    sys.exit(1)
+
+# ----------------------------
 # CSV header
 # ----------------------------
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -100,9 +100,11 @@ try:
             writer = csv.writer(f)
             writer.writerow(headers)
 
+            file_start_time = time.time() # Track file start time
             for _ in range(10):
                 loop_start = time.time()
-                row = [time.strftime('%Y-%m-%d %H:%M:%S')]
+                elapsed_ms = round((loop_start - file_start_time) * 1000)
+                row = [elapsed_ms]
 
                 # BME680
                 if bme680_sensor.get_sensor_data():
