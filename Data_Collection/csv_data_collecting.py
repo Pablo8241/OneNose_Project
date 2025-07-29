@@ -78,7 +78,9 @@ bme680_sensor.select_gas_heater_profile(0)
 # ----------------------------
 # CSV header
 # ----------------------------
-os.makedirs("Data", exist_ok=True)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(script_dir, "Data")
+os.makedirs(data_dir, exist_ok=True)
 
 headers = ['timestamp', 'BME680_temp', 'BME680_pressure', 'BME680_humidity', 'BME680_gas']
 for i in range(5, 11):
@@ -93,7 +95,7 @@ print("[INFO] Starting data collection. Type 'stop' and press Enter to stop afte
 try:
     while not stop_requested:
         timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"Data/{label}_{timestamp_str}.csv"
+        filename = os.path.join(data_dir, f"{label}_{timestamp_str}.csv")
         with open(filename, mode='w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(headers)
