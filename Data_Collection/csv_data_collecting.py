@@ -70,6 +70,7 @@ bme680_sensor.set_gas_heater_temperature(320)
 bme680_sensor.set_gas_heater_duration(150)
 bme680_sensor.select_gas_heater_profile(0)
 
+print("Now asking for label...")
 # ----------------------------
 # Ask user for label interactively
 # ----------------------------
