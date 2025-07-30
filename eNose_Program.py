@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 import time
 import adafruit_sgp30
@@ -18,6 +19,8 @@ from enose_functions import normalize, colorWipe
 # Define a bias to rotate LED direction to match sensor layout
 PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
 COUNT = 20  # For Grove - WS2813 RGB LED Ring - 20 LED total
+
+args = sys.argv[1:]
 
 stop_event = threading.Event() # thread-safe flag
 
@@ -167,6 +170,8 @@ def sensor_loop():
         print(f"Features array: {features}")
         print(f"Features count: {len(features)}")
 
+        res = runner.classify(features)
+
         time.sleep(1) # Wait for 1 second before the next reading (this is the minimum required for SGP30)
 
 def start_gui():
@@ -241,6 +246,7 @@ def on_closing():
 
 def program_init():
     global bme680_sensor
+    global runner
 
     GPIO.cleanup()
     
@@ -281,6 +287,18 @@ def program_init():
     GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Normal exit
     button_thread = threading.Thread(target=button_polling_loop, daemon=True)
     button_thread.start()
+
+    model = args
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    modelfile = os.path.join(dir_path, model)
+
+    runner = ImpulseRunner(modelfile)
+    model_info = runner.init()
+
+    print("Model info:")
+    print(model_info['project']['owner'] + '/' + model_info['project']['name'])
+    print(model_info['model_parameters']['input_features_count'], "features expected")
 
     print ('Testing LED ring functionality with a color wipe animation.')
     colorWipe(strip, Color(0, 255, 0))  # Green wipe
