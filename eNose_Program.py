@@ -11,6 +11,7 @@ import RPi.GPIO as GPIO
 from grove.i2c import Bus
 from rpi_ws281x import PixelStrip, Color
 from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
+from edge_impulse_linux.runner import ImpulseRunner # Imports Edge Impulse's C++ model runner (runs the .eim model file)
 
 from enose_functions import normalize, colorWipe
 
@@ -124,19 +125,47 @@ def sensor_loop():
                 print(f"SGP30_{i+1}: Error reading sensor")
         print("-" * 50)
 
-        # Read BME680 sensor data
+        # Read BME680 sensor data and collect features
+        features = []  # List to store all sensor readings as floats
+        
         if bme680_sensor.get_sensor_data():
-            output = '{0:.2f} C,{1:.2f} hPa,{2:.2f} %RH'.format(
-                bme680_sensor.data.temperature,
-                bme680_sensor.data.pressure,
-                bme680_sensor.data.humidity)
-
+            # Add BME680 readings to features list
+            features.append(float(bme680_sensor.data.temperature))
+            features.append(float(bme680_sensor.data.pressure))
+            features.append(float(bme680_sensor.data.humidity))
+            
             if bme680_sensor.data.heat_stable:
+                features.append(float(bme680_sensor.data.gas_resistance))
+                output = '{0:.2f} C,{1:.2f} hPa,{2:.2f} %RH'.format(
+                    bme680_sensor.data.temperature,
+                    bme680_sensor.data.pressure,
+                    bme680_sensor.data.humidity)
                 print('{0},{1} Ohms'.format(
                     output,
                     bme680_sensor.data.gas_resistance))
             else:
+                features.append(0.0)  # Add 0.0 if gas reading not stable
+                output = '{0:.2f} C,{1:.2f} hPa,{2:.2f} %RH'.format(
+                    bme680_sensor.data.temperature,
+                    bme680_sensor.data.pressure,
+                    bme680_sensor.data.humidity)
                 print(output)
+        else:
+            # Add zeros if BME680 reading fails
+            features.extend([0.0, 0.0, 0.0, 0.0])
+        
+        # Add SGP30 sensor readings (indexes 4-9) to features list
+        for i in range(4, 10):  # SGP30_5 to SGP30_10 (indexes 4-9)
+            if i < len(co2_readings) and co2_readings[i] is not None and tvoc_readings[i] is not None:
+                features.append(float(co2_readings[i]))
+                features.append(float(tvoc_readings[i]))
+            else:
+                # Add zeros if sensor reading fails
+                features.extend([0.0, 0.0])
+        
+        # Print features array for debugging
+        print(f"Features array: {features}")
+        print(f"Features count: {len(features)}")
 
         time.sleep(1) # Wait for 1 second before the next reading (this is the minimum required for SGP30)
 
