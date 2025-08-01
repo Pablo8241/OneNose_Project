@@ -14,13 +14,19 @@ import bme680
 
 # Global stop flag
 stop_requested = False
+exit_requested = False
 
 def input_listener():
-    global stop_requested
+    global stop_requested, exit_requested
     while True:
         user_input = input()
         if user_input.strip().lower() == 'stop':
             print("[INFO] Stop requested. Finishing current file...")
+            stop_requested = True
+            break
+        elif user_input.strip().lower() == 'exit':
+            print("[INFO] Exit requested. Finishing current file and exiting...")
+            exit_requested = True
             stop_requested = True
             break
 
@@ -93,10 +99,10 @@ for i in range(5, 11):
 # ----------------------------
 # Main Loop
 # ----------------------------
-print("[INFO] Starting data collection. Type 'stop' and press Enter to stop after current file.")
+print("[INFO] Starting data collection. Type 'stop' and press Enter to change label, or 'exit' to quit.")
 
 try:
-    while not stop_requested:
+    while not exit_requested:
         timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = os.path.join(data_dir, f"{label}_{timestamp_str}.csv")
         with open(filename, mode='w', newline='') as f:
@@ -105,6 +111,9 @@ try:
 
             file_start_time = time.time() # Track file start time
             for _ in range(10):
+                if stop_requested:  # Check if stop was requested during file writing
+                    break
+                    
                 loop_start = time.time()
                 elapsed_ms = round((loop_start - file_start_time) * 1000)
                 row = [elapsed_ms]
@@ -133,6 +142,21 @@ try:
                 elapsed = time.time() - loop_start
                 if elapsed < 1.0:
                     time.sleep(1.0 - elapsed)
+
+        # Check if we need to ask for a new label or exit
+        if stop_requested and not exit_requested:
+            print(f"[INFO] File '{filename}' completed.")
+            print("[INFO] Enter new label for next measurements:")
+            label = input("Enter label: ").strip()
+            if not label:
+                print("[INFO] Label cannot be empty. Exiting...")
+                break
+            
+            # Reset stop flag and restart input listener
+            stop_requested = False
+            threading.Thread(target=input_listener, daemon=True).start()
+            print(f"[INFO] Label changed to '{label}'. Continuing data collection...")
+            print("[INFO] Type 'stop' to change label again, or 'exit' to quit.")
 
 except KeyboardInterrupt:
     print("\n[INFO] Ctrl+C detected. Finishing current file and exiting...")
