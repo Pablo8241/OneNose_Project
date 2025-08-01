@@ -111,9 +111,6 @@ try:
 
             file_start_time = time.time() # Track file start time
             for _ in range(10):
-                if stop_requested:  # Check if stop was requested during file writing
-                    break
-                    
                 loop_start = time.time()
                 elapsed_ms = round((loop_start - file_start_time) * 1000)
                 row = [elapsed_ms]
