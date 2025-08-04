@@ -180,6 +180,7 @@ def sensor_loop():
                         text=f"Detected Smell: {top_class}",
                         foreground="black"
                     ))
+                    print("Raw model output:", res) ## DEBUGGING
                 else:
                     label4.after(0, lambda: label4.config(
                         text="Invalid model output.",
