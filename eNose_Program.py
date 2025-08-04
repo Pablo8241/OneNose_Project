@@ -20,7 +20,7 @@ from enose_functions import normalize, colorWipe
 PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
 COUNT = 20  # For Grove - WS2813 RGB LED Ring - 20 LED total
 
-args = sys.argv[1:]
+args = sys.argv[1:] # a list that contains the command-line arguments passed to the script (e.g. model.eim)
 
 stop_event = threading.Event() # thread-safe flag
 
@@ -170,7 +170,32 @@ def sensor_loop():
         print(f"Features array: {features}")
         print(f"Features count: {len(features)}")
 
-        res = runner.classify(features)
+
+        if runner is not None:
+            try:
+                res = runner.classify(features)
+                if 'result' in res and isinstance(res['result'], dict):
+                    top_class = max(res['result'], key=res['result'].get)
+                    label4.after(0, lambda: label4.config(
+                        text=f"Detected Smell: {top_class}",
+                        foreground="black"
+                    ))
+                else:
+                    label4.after(0, lambda: label4.config(
+                        text="Invalid model output.",
+                        foreground="red"
+                    ))
+            except Exception as e:
+                print(f"Classification error: {e}")
+                label4.after(0, lambda: label4.config(
+                    text="Classification failed.",
+                    foreground="red"
+                ))
+        else:
+            label4.after(0, lambda: label4.config(
+                text="No model loaded.",
+                foreground="gray"
+            ))
 
         time.sleep(1) # Wait for 1 second before the next reading (this is the minimum required for SGP30)
 
@@ -205,7 +230,7 @@ def start_gui():
     )
     window.label2.pack(pady=(0, 4))  # Move expand=True to the second label -- pady(characters above, characters below)
 
-    # Create a third label below the second one (This one will display the sensor with the highest readings)
+    # Create a third label below the second one (this one will display the sensor with the highest readings)
     global label3
     
     label3 = tk.Label(
@@ -218,7 +243,10 @@ def start_gui():
     )
     label3.pack(pady=(30, 0))  # Move expand=True to the second label
 
-    window.label4 = tk.Label(
+    # Create a fourth label below the third (this one will display the detected smell)
+    global label4
+
+    label4 = tk.Label(
         window,
         text="Bind smell to this label",
         foreground="gray",                      
@@ -226,7 +254,7 @@ def start_gui():
         font=("Helvetica", 20),                 
         justify="center"                         
     )
-    window.label4.pack(pady=(2, 0))  # Move expand=True to the second label
+    label4.pack(pady=(2, 0))  # Move expand=True to the second label
 
     window.mainloop()  # Start the Tkinter main loop
 
@@ -284,17 +312,27 @@ def program_init():
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Shutdown trigger
-    GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Normal exit
+    GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Button action unassigned
     button_thread = threading.Thread(target=button_polling_loop, daemon=True)
     button_thread.start()
 
-    model = args
+    if len(args) != 1:
+        print("No model file provided. Running without Edge Impulse model.")
+        runner = None
+    else:
+        model = args[0]
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        modelfile = os.path.join(dir_path, model)
 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    modelfile = os.path.join(dir_path, model)
-
-    runner = ImpulseRunner(modelfile)
-    model_info = runner.init()
+        try:
+            runner = ImpulseRunner(modelfile)
+            model_info = runner.init()
+            print("Model info:")
+            print(model_info['project']['owner'] + '/' + model_info['project']['name'])
+            print(model_info['model_parameters']['input_features_count'], "features expected")
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            runner = None
 
     print("Model info:")
     print(model_info['project']['owner'] + '/' + model_info['project']['name'])
@@ -316,12 +354,10 @@ def button_polling_loop():
         if prev_state_27 == GPIO.HIGH and curr_state_27 == GPIO.LOW:
             print("GPIO 27 pressed – triggering shutdown.")
             shutdown = True
-            window.after(0, on_closing)
+            window.after(1, on_closing)
 
         if prev_state_17 == GPIO.HIGH and curr_state_17 == GPIO.LOW:
-            print("GPIO 17 pressed – exiting app without shutdown.")
-            shutdown = False
-            window.after(0, on_closing)
+            print("GPIO 17 pressed – button action unassigned.")
 
         prev_state_27 = curr_state_27
         prev_state_17 = curr_state_17
@@ -360,6 +396,6 @@ else:
             text=f"Closing app without shutdown...",
             foreground="red"
         ))
-    print("Shutdown not triggered. Closing app and staying powered on.")
+    print("Shutdown not triggered - on_closing() function called accidentally?.")
 
 ## MAIN == end ==
