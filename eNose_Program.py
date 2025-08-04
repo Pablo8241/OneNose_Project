@@ -388,7 +388,7 @@ if shutdown:
             text=f"Closing app and shutting down...",
             foreground="red"
         ))
-    time.sleep(2)  # Delay before shutdown
+    time.sleep(1)  # Delay before shutdown
     subprocess.run(["sudo", "shutdown", "now"])
 else:
     label3.after(0, lambda: label3.config(
