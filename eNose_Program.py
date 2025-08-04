@@ -392,6 +392,6 @@ else:
             text=f"Closing app without shutdown...",
             foreground="red"
         ))
-    print("Shutdown not triggered - on_closing() function called accidentally?.")
+    print("Shutdown not triggered - on_closing() called, closing app without shutdown.")
 
 ## MAIN == end ==
