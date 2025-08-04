@@ -174,13 +174,15 @@ def sensor_loop():
         if runner is not None:
             try:
                 res = runner.classify(features)
-                if 'result' in res and isinstance(res['result'], dict):
-                    top_class = max(res['result'], key=res['result'].get)
+                print("Raw model output:", res)
+
+                if 'result' in res and 'classification' in res['result']:
+                    classifications = res['result']['classification']
+                    top_class = max(classifications, key=classifications.get)
                     label4.after(0, lambda: label4.config(
                         text=f"Detected Smell: {top_class}",
                         foreground="black"
                     ))
-                    print("Raw model output:", res) ## DEBUGGING
                 else:
                     label4.after(0, lambda: label4.config(
                         text="Invalid model output.",
