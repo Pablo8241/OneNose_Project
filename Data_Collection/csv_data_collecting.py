@@ -104,7 +104,7 @@ print("[INFO] Starting data collection. Type 'stop' and press Enter to change la
 try:
     while not exit_requested:
         timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = os.path.join(data_dir, f"{label}_{timestamp_str}.csv")
+        filename = os.path.join(data_dir, f"{label}.{timestamp_str}.csv")
         with open(filename, mode='w', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(headers)
