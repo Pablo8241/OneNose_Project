@@ -334,10 +334,6 @@ def program_init():
             print(f"Error loading model: {e}")
             runner = None
 
-    print("Model info:")
-    print(model_info['project']['owner'] + '/' + model_info['project']['name'])
-    print(model_info['model_parameters']['input_features_count'], "features expected")
-
     print ('Testing LED ring functionality with a color wipe animation.')
     colorWipe(strip, Color(0, 255, 0))  # Green wipe
 
