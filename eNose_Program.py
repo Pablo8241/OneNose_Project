@@ -180,7 +180,7 @@ def sensor_loop():
                     classifications = res['result']['classification']
                     top_class = max(classifications, key=classifications.get)
                     label4.after(0, lambda: label4.config(
-                        text=f"Detected Smell: {top_class}",
+                        text=f"Smell: {top_class}",
                         foreground="black"
                     ))
                 else:
@@ -241,7 +241,7 @@ def start_gui():
         text="Awaiting sensor data...",  # Initial text
         foreground="gray",                      
         background=window["bg"],                      
-        font=("Helvetica", 45),                 
+        font=("Helvetica", 35),                 
         justify="center"                         
     )
     label3.pack(pady=(30, 0))  # Move expand=True to the second label
@@ -254,7 +254,7 @@ def start_gui():
         text="Bind smell to this label",
         foreground="gray",                      
         background=window["bg"],                      
-        font=("Helvetica", 20),                 
+        font=("Helvetica", 45),                 
         justify="center"                         
     )
     label4.pack(pady=(2, 0))  # Move expand=True to the second label
