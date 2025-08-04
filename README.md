@@ -4,7 +4,7 @@
 
 The Directional eNose is an electronic nose system designed to detect and identify the direction of odors and chemical substances in the environment. The system uses multiple SGP30 air quality sensors arranged in a circular pattern to detect CO2 and TVOC (Total Volatile Organic Compounds) concentrations from different directions. It has the functionality of being able to detect where a smell is coming from and display the direction using an LED ring as indicator. In addition to that it has a BME680 and 6 functionalised gas sensors used for detecting the type of odor.
 
-The main program (`eNose_Program.py`) continuously monitors all sensors and environmental conditions, providing real-time data on air quality measurements and environmental parameters.
+The main program (`eNose_Program.py`) continuously monitors all sensors and environmental conditions, providing real-time data on air quality measurements and environmental parameters. In addition to directional detection, the program can identify specific smells using a machine learning model generated with Edge Impulse. By loading a `.eim` model file, the system classifies odors in real time based on sensor data and displays the detected smell on the GUI. The program also features a graphical interface for live feedback and supports safe shutdown and control via the hardware buttons on the display.
 
 ## Hardware Components
 
@@ -13,7 +13,7 @@ The main program (`eNose_Program.py`) continuously monitors all sensors and envi
 - **2x TCA9548A I2C Multiplexers** - Managing multiple sensors with same I2C address
 - **1x WS2813 RGB LED Ring (20 LEDs)** - Directional indication display
 - **Raspberry Pi with Grove Base Hat** - Main processing unit
-- **Adafruit PiTFT Plus 320x240 2.8" TFT** - Display for the GUI
+- **Adafruit PiTFT Plus 320x240 2.8" TFT** - Display for the GUI + 2 buttons
 
 ## Device I2C Addresses
 
@@ -35,6 +35,54 @@ The main program (`eNose_Program.py`) continuously monitors all sensors and envi
 4. **BME680 and LED Ring**: Connect the BME680 to any open I2C port on the eNose. Connect the RGB ring GND to any ground pin on the base hat Raspberry Pi extension board, power to the 5V power supply pin and the SIG pin to GPIO 12 (pin 32 on the Raspberry Pi header).
 
 5. **Display**: The display uses the hardware SPI pins (SCK, MOSI, MISO, CE0, CE1) as well as GPIO
-#25 and #24. GPIO #17 and #27 are used for two of the 4 buttons on the display and serve as buttons to turn off the Raspberry Pi or close the GUI. All pins are connected using female-to-female jumper cables from the display directly to the pins of the base hat apart from the power input, which is taken directly from the 5V power supply.
+#25 and #24. GPIO #17 and #27 are used for two of the 4 buttons on the display, one of which serves as a button to turn off the Raspberry Pi. All pins can be connected using female-to-female jumper cables from the display directly to the pins of the base hat apart from the power input, which is taken directly from the 5V power supply.
 
-5. **Final Assembly**: You can now screw the top cover in place.
+6. **Final Assembly**: You can now screw the top cover in place.
+
+## Data Collection Setup
+
+### CSV Data Collection Order
+
+The `csv_data_collecting.py` script collects sensor data in the following specific order:
+
+**BME680 Environmental Data (4 readings):**
+1. Temperature (°C)
+2. Pressure (hPa)  
+3. Humidity (%RH)
+4. Gas Resistance (Ohms)
+
+**SGP30 Gas Sensor Data (12 readings from sensors 5-10):**
+5. SGP30_5_CO2 (ppm)
+6. SGP30_5_TVOC (ppb)
+7. SGP30_6_CO2 (ppm)
+8. SGP30_6_TVOC (ppb)
+9. SGP30_7_CO2 (ppm)
+10. SGP30_7_TVOC (ppb)
+11. SGP30_8_CO2 (ppm)
+12. SGP30_8_TVOC (ppb)
+13. SGP30_9_CO2 (ppm)
+14. SGP30_9_TVOC (ppb)
+15. SGP30_10_CO2 (ppm)
+16. SGP30_10_TVOC (ppb)
+
+This order ensures consistent data formatting for machine learning model training and inference.
+
+## Machine Learning Model Deployment
+
+### Deploying Edge Impulse Model
+
+To deploy your trained machine learning model from Edge Impulse:
+
+1. **Select Deployment Target**: 
+   - Go to **Deployment** options in your Edge Impulse project
+   - Choose **"Linux (ARMv7)"** as the deployment target
+   - Ensure the target device is set to **Raspberry Pi 4**
+
+2. **Build and Download**:
+   - Click **Build** to generate the model
+   - Download the generated `.eim` file
+
+3. **Install Model**:
+   - Place the downloaded `.eim` file in the same directory as `eNose_Program.py`
+   - The program will automatically load and use the model for real-time odor classification
+
