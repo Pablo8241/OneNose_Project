@@ -250,7 +250,7 @@ def start_gui():
         window,
         text="Awaiting sensor data...",  # Initial text
         foreground="gray",                      
-        background='',                      
+        background=window["bg"],                      
         font=("Helvetica", 35),                 
         justify="center"                         
     )
