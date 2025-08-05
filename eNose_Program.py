@@ -231,7 +231,7 @@ def start_gui():
         text="OneNose",           # The text to display
         foreground="black",           # Text color
         background="#ffffff",           # Background color (matches window background)
-        font=("Helvetica", 60, "bold"), # Font family, size, and style
+        font=("Helvetica", 65, "bold"), # Font family, size, and style
         anchor="n",                   # Anchor text to the top center ('n' = north)
         justify="center"              # Center the text horizontally
     )
