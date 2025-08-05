@@ -215,8 +215,10 @@ def start_gui():
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
 
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Get path to current script
+    image_path = os.path.join(script_dir, "Assets", "background.jpg")
     # Resize image to fit screen
-    bg_image = Image.open("Assets/background.jpg")
+    bg_image = Image.open(image_path)
     bg_image = bg_image.resize((screen_width, screen_height), Image.LANCZOS)
     bg_photo = ImageTk.PhotoImage(bg_image)
 
@@ -403,7 +405,6 @@ if shutdown:
             text=f"Closing app and shutting down...",
             foreground="red"
         ))
-    time.sleep(1)  # Delay before shutdown
     subprocess.run(["sudo", "shutdown", "now"])
 else:
     label3.after(0, lambda: label3.config(
