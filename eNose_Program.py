@@ -230,7 +230,7 @@ def start_gui():
         window,
         text="OneNose",           # The text to display
         foreground="black",           # Text color
-        background="#216dd8",           # Background color (matches window background)
+        background="#ffffff",           # Background color (matches window background)
         font=("Helvetica", 60, "bold"), # Font family, size, and style
         anchor="n",                   # Anchor text to the top center ('n' = north)
         justify="center"              # Center the text horizontally
@@ -242,7 +242,7 @@ def start_gui():
         window,
         text="Directional Electronic Nose", 
         foreground="black",                       
-        background="#216dd8",                   
+        background="#ffffff",                   
         font=("Helvetica", 35),               
         justify="center"                       
     )
@@ -255,7 +255,7 @@ def start_gui():
         window,
         text="Awaiting sensor data...",  # Initial text
         foreground="yellow",                      
-        background="#216dd8",                      
+        background="#ffffff",                      
         font=("Helvetica", 35),                 
         justify="center"                         
     )
@@ -268,7 +268,7 @@ def start_gui():
         window,
         text="Bind smell to this label",
         foreground="gray",                      
-        background="#216dd8",                      
+        background="#ffffff",                      
         font=("Helvetica", 35, "bold"),       
         justify="center"                         
     )
