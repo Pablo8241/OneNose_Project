@@ -8,13 +8,14 @@ import board
 import adafruit_tca9548a
 import tkinter as tk
 import threading
-import RPi.GPIO as GPIO
-from grove.i2c import Bus
-from rpi_ws281x import PixelStrip, Color
-from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip
+import RPi.GPIO as GPIO # For GPIO control
+from PIL import Image, ImageTk # For GUI image handling
+from grove.i2c import Bus # For Grove I2C communication
+from rpi_ws281x import PixelStrip, Color # For WS2813 RGB LED Strip control
+from grove_ws2813_rgb_led_strip import GroveWS2813RgbStrip # For Grove WS2813 RGB LED Strip control
 from edge_impulse_linux.runner import ImpulseRunner # Imports Edge Impulse's C++ model runner (runs the .eim model file)
 
-from enose_functions import normalize, colorWipe
+from enose_functions import normalize, colorWipe # Import utility functions (moved them to make the code cleaner)
 
 # Define a bias to rotate LED direction to match sensor layout
 PIN   = 12  # connect Grove WS2813 RGB LED Strip SIG to pin 12(slot PWM)
@@ -206,8 +207,17 @@ def start_gui():
     global window
     window = tk.Tk()
     window.title("Directional eNose GUI")
-    window.protocol("WM_DELETE_WINDOW", on_closing)
-    window.attributes('-fullscreen', True)
+    window.protocol("WM_DELETE_WINDOW", on_closing) # Handle window close event
+    window.attributes('-fullscreen', True) # Fullscreen mode
+    window.config(cursor="none") # Hide mouse cursor
+
+    # Load image from Assets folder (no resizing)
+    bg_image = Image.open("Assets/background.jpg")
+    bg_photo = ImageTk.PhotoImage(bg_image)
+
+    # Place the image as a Label behind everything
+    bg_label = tk.Label(window, image=bg_photo)
+    bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     # GUI widgets
     # Create a label at the top center of the window

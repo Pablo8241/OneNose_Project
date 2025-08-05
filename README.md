@@ -12,7 +12,7 @@ The main program (`eNose_Program.py`) continuously monitors all sensors and envi
 - **1x BME680 Environmental Sensor** - Temperature, humidity, pressure, and gas resistance
 - **2x TCA9548A I2C Multiplexers** - Managing multiple sensors with same I2C address
 - **1x WS2813 RGB LED Ring (20 LEDs)** - Directional indication display
-- **Raspberry Pi with Grove Base Hat** - Main processing unit
+- **Raspberry Pi 4 with Grove Base Hat** - Main processing unit
 - **Adafruit PiTFT Plus 320x240 2.8" TFT** - Display for the GUI + 2 buttons
 
 ## Device I2C Addresses
