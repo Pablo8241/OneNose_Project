@@ -217,7 +217,7 @@ def start_gui():
 
     # Resize image to fit screen
     bg_image = Image.open("Assets/background.jpg")
-    bg_image = bg_image.resize((screen_width, screen_height), Image.ANTIALIAS)
+    bg_image = bg_image.resize((screen_width, screen_height), Image.LANCZOS)
     bg_photo = ImageTk.PhotoImage(bg_image)
 
     # Place the image as a Label behind everything
