@@ -264,7 +264,7 @@ def start_gui():
         text="Bind smell to this label",
         foreground="gray",                      
         background=window["bg"],                      
-        font=("Helvetica", 40, "bold"),       
+        font=("Helvetica", 35, "bold"),       
         justify="center"                         
     )
     label4.pack(pady=(2, 0))  # Move expand=True to the second label
