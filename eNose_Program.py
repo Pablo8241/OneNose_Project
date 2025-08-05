@@ -236,7 +236,7 @@ def start_gui():
     window.label2 = tk.Label(
         window,
         text="Directional Electronic Nose", 
-        foreground="gray",                       
+        foreground="black",                       
         background="#216dd8",                   
         font=("Helvetica", 35),               
         justify="center"                       
@@ -249,7 +249,7 @@ def start_gui():
     label3 = tk.Label(
         window,
         text="Awaiting sensor data...",  # Initial text
-        foreground="gray",                      
+        foreground="yellow",                      
         background="#216dd8",                      
         font=("Helvetica", 35),                 
         justify="center"                         
