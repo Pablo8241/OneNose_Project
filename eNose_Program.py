@@ -211,8 +211,13 @@ def start_gui():
     window.attributes('-fullscreen', True) # Fullscreen mode
     window.config(cursor="none") # Hide mouse cursor
 
-    # Load image from Assets folder (no resizing)
+    # Get screen width and height
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+
+    # Resize image to fit screen
     bg_image = Image.open("Assets/background.jpg")
+    bg_image = bg_image.resize((screen_width, screen_height), Image.ANTIALIAS)
     bg_photo = ImageTk.PhotoImage(bg_image)
 
     # Place the image as a Label behind everything
