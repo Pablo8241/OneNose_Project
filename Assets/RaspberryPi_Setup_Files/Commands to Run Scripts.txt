@@ -1,0 +1,27 @@
+Commands to run code on the Raspberry pi:
+For the app with GUI (should start automatically, but in case you haven't set it up or you just don't want to reboot):
+sudo /home/pablo/appenv/bin/python3 /home/pablo/OneNose_Project/eNose_Program.py model.py
+
+For data collection script:
+/home/pablo/appenv/bin/python3 /home/pablo/OneNose_Project/Data_Collection/csv_data_collecting.py
+
+FIRST MAKE SURE YOU PULL CHANGES
+
+If you want to remove old data:
+First delete the data files from 'Data' folder.
+Then stage the deleted files:
+git add -u
+Commit the changes:
+git commit -m "Removing old data"
+Push the changes:
+git push
+
+To add untracked files(basically the new aquired data):
+Add the new files:
+git add .
+Commit the changes:
+git commit -m "Adding new data files"
+Push the changes:
+git push
+
+

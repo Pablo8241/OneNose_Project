@@ -1,0 +1,46 @@
+List of packages to install for the One Nose program to work:
+First make sure you are within the environment your program is going to run in.
+
+sudo apt install git -y
+git clone https://github.com/Seeed-Studio/grove.py.git
+cd grove.py
+pip install .
+
+pip install adafruit-circuitpython-sgp30
+pip install adafruit-circuitpython-tca9548a
+pip install adafruit-blinka
+pip install bme680
+pip install rpi_ws281x
+pip install RPi.GPIO
+
+sudo apt install python3-pil python3-pil.imagetk libjpeg-dev zlib1g-dev libtiff5-dev libfreetype6-dev liblcms2-dev libopenjp2-7-dev libwebp-dev tcl8.6-dev tk8.6-dev python3-tk
+pip install pillow
+
+Make sure the .eim model should be made executable with:
+chmod +x model.eim
+
+sudo apt-get install libatlas-base-dev libportaudio0 libportaudio2 libportaudiocpp0 portaudio19-dev
+pip install edge_impulse_linux -i https://pypi.python.org/simple
+pip install numpy
+pip install pyaudio
+pip install psutils
+pip install libopenblas0
+pip instal libblas3
+pip install cv2
+pip install six
+
+pip install opencv-python --prefer-binary
+
+
+sudo apt update
+cd ~  # Or any directory where you'd like the repo
+git clone https://github.com/Pablo8241/OneNose_Project.git
+
+cd OneNose_Project
+
+And to pull changes: "git pull"
+
+And then to run your program:
+"sudo /path/to/your/env/bin/python /path/to/your/script.py"
+e.g. "sudo /home/pablo/appenv/bin/python /home/pablo/OneNose_Project/eNose_Program.py"
+

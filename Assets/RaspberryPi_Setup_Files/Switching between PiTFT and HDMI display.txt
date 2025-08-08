@@ -1,0 +1,12 @@
+The issue with the PiTFT and external large display is that if the PiTFT is rotated, the image on the large display is also rotated and you cannot adjust the display orientation individually. This is why you need to enable the DRM driver, which switches to the large display and allows you to rotate the image.
+
+Open terminal and write:
+sudo nano /boot/firmware/config.txt
+
+Find "Enable DRM VC4 V3D driver" comment/uncomment to toggle between PITFT and big display(hdmi output):
+dtoverlay=vc4-kms-v3d
+display_dmi_rotate=2
+
+Then just reboot.
+
+You can only use one display at a time due to the rotation of the display.

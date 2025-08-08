@@ -1,0 +1,17 @@
+Make sure /boot/config.txt has the correct rotation setting for the PiTFT.
+
+Open the file:
+
+sudo nano /boot/config.txt
+
+Look for this section (added by adafruit-pitft.py):
+
+# --- added by adafruit-pitft-helper ---
+[pi4]
+dtoverlay=pitft28-capacitive,rotate=270,speed=62000000,fps=60
+[all]
+...
+
+If rotate=270 is not there or incorrect, set it to 270.
+
+Then save (Ctrl+O, Enter) and exit (Ctrl+X).

@@ -1,0 +1,26 @@
+Unable to use "pip install {package of choice}":
+Installing packages directly to the main Python environment on a Raspberry Pi is restricted because it can break system tools that rely on specific Python versions and packages. It risks system instability and dependency conflicts. Instead, you can use a virtual environment (python3 -m venv myenv) to isolate packages, or install them just for your user with pip3 install --user <package>. Both methods avoid interfering with system Python.
+
+Navigating to environment:
+In the terminal write "source {path_to_your_env}/bin/activate"
+E.g. "source /home/raspberry/myenv/bin/activate"
+
+I2C bus not enabled:
+I2C is disabled on default so to enable it you need to run "sudo raspi-config" and navigate to 'Interface Options'>'I2C'>'Enable'.
+
+To run RGB led program:
+You have to navigate to your environment and install the rpi_ws281x" package
+Connect GND to GND on the RaspberryPI and power to an external power supply (connecting directly to 3.3V pin not recommended) and SIG pin to either
+pin 18 or pin 12. NC pin stands for Not Connected.
+Make sure you then configure which pin you are using in code (12 or 18) and the number of LEDs (in this case 20 for the '20 - WS2813 Mini')
+Then you need to run the script through the terminal with "sudo /home/raspberry/Desktop/envdir/bin/python3 /home/raspberry/Desktop/OneNose_Programs/RGB_ring.py {12 or 18}"
+This is because the script doesn't have the required permissions to access the Raspberry Pi's hardware interfaces, which rpi_ws281x needs to control the LEDs.
+
+To clone a Github repo:
+Open the terminal.
+Navigate to the directory where you want to clone the repository using 'cd'.
+Then execute 'git clone {github_repository_URL}'.
+
+To pull changes after cloning the repo:
+Always make sure you have access to internet(even if you are connected to WiFi". Go to to the Web Browser and lick on 'Chrome Web' and log in to access internet.
+Open terminal and navigate to folder the repo is located at using "cd" and write "git pull".

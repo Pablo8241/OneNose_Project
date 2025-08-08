@@ -1,0 +1,13 @@
+Open the file:
+sudo nano /etc/lightdm/lightdm.conf
+
+Find this line (it may be commented out like below):
+#xserver-command=X
+
+Replace or edit it so it reads:
+xserver-command=X -s 0 -dpms
+
+Save and exit (Ctrl+O, Enter, Ctrl+X), then reboot:
+
+Then reboot:
+sudo reboot

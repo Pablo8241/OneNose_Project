@@ -1,0 +1,11 @@
+Make sure the csv_collection script collect data in the following order:
+The first three readings are from the BME680:
+temp, pressure, humidity, gas resistance
+Then we have readings from each of the 6 SGP30 sensors starting from sensor 5:
+sgp30_5_co2, sgp30_5_tvoc, sgp30_6_co2, sgp30_6_tvoc... and so on until sgp30_10_co2, sgp30_10_tvoc
+
+
+Deploy machine-learning algorithm as a .eim file:
+Go to deployment options and choose "Linux (ARMv7)". Also make sure the target device is Raspberry Pi 4.
+Then Build and download the generated .eim file.
+Place the .eim file in the same directory as 'Enose_Program.py'.
