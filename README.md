@@ -1,3 +1,25 @@
+## Contact
+
+For questions, suggestions, or support, please contact:
+
+**Ventsislav Ivanov**
+ventsislav@mci.sdu.dk
+
+## Repository Structure
+
+The main files and folders in this repository are:
+
+- `eNose_Program.py` — Main application with GUI, sensor reading, and ML inference
+- `enose_functions.py` — Utility functions for normalization, LED control, etc.
+- `csv_data_collecting.py` — Script for collecting labeled sensor data for ML
+- `Assets/` — Images and assets for the GUI (e.g., backgrounds)
+- `Data/` — Collected CSV data files for training
+- `Other_Scripts/` — Additional scripts for testing, diagnostics, or hardware setup
+    - `RGB_ring_simple.py`, `RGB_ring.py` — LED ring test scripts
+    - `simple_BME680_readings.py`, `simple_sgp30_readings.py` — Sensor test scripts
+    - `TCAdevice_scan.py` — I2C multiplexer scan utility
+### Data Collection Script Details
+The `csv_data_collecting.py` script is used to collect labeled sensor data for training machine learning models.
 # Directional_eNose
 
 ## Description
@@ -85,4 +107,50 @@ To deploy your trained machine learning model from Edge Impulse:
 3. **Install Model**:
    - Place the downloaded `.eim` file in the same directory as `eNose_Program.py`
    - The program will automatically load and use the model for real-time odor classification
+   - The program will automatically load and use the model for real-time odor classification
+
+## Usage
+
+### Running the Main Program
+
+To start the main GUI application (with optional Edge Impulse model):
+
+```bash
+python3 eNose_Program.py [model.eim]
+```
+
+- If you provide a `.eim` file, the program will use it for real-time odor classification.
+- If no model is provided, the program will run in sensor-only mode.
+
+### Running the Data Collection Script
+
+To collect training data for machine learning:
+
+```bash
+
+```bash
+python3 csv_data_collecting.py
+```
+
+**How it works:**
+- The script will prompt you to enter a label for the data (e.g., the odor or condition being measured).
+- It will then collect 10 complete sets of sensor readings and save them as a single row in a CSV file. It will continuously generate CSV files with new readings until you prompt it to stop.
+- You can type `stop` to finish the current file after the current set of 10 readings, or `exit` to stop immediately.
+- Each file is saved in the `Data/` directory with a timestamp and label in the filename.
+
+**Example CSV output:**
+
+```
+label,temperature,pressure,humidity,gas_resistance,sgp30_5_co2,sgp30_5_tvoc,...,sgp30_10_co2,sgp30_10_tvoc
+banana,24.5,1012.3,45.2,120000,400,0,...,410,2
+```
+
+**Tips:**
+- Ensure the sensors are stable before starting a new label.
+- Use consistent labeling for best results in machine learning.
+
+### Stopping the Main Program
+
+- Use the shutdown button on the display to safely power off the Raspberry Pi.
+- To exit the GUI, use the window close button or the appropriate hardware button.
 
