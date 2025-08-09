@@ -85,7 +85,6 @@ To deploy your trained machine learning model from Edge Impulse:
 3. **Install Model**:
    - Place the downloaded `.eim` file in the same directory as `eNose_Program.py`
    - The program will automatically load and use the model for real-time odor classification
-   - The program will automatically load and use the model for real-time odor classification
 
 ## Usage
 
@@ -151,8 +150,6 @@ The main files and folders in this repository are:
     - `RGB_ring_simple.py`, `RGB_ring.py` — LED ring test scripts
     - `simple_BME680_readings.py`, `simple_sgp30_readings.py` — Sensor test scripts
     - `TCAdevice_scan.py` — I2C multiplexer scan utility
-### Data Collection Script Details
-The `csv_data_collecting.py` script is used to collect labeled sensor data for training machine learning models.
 
 ## Contact
 
