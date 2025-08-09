@@ -155,8 +155,8 @@ timestamp,BME680_temp,BME680_pressure,BME680_humidity,BME680_gas,SGP30_5_CO2,SGP
 ```
 
 **Tips:**
-- Ensure the sensor readings and file are generated properly after starting the script for the first time.
-- Use consistent labeling to prevent having to alter the file names later due to mistakes (e.g. try not to accidentally switch labels for chocolateicecream with chocoicecream).
+- Ensure the sensor readings and file are generated properly after starting the script for the first time. For example, look for corrupt/empty readings or improperly generated CSV file.
+- Use consistent labeling to prevent having to alter the file names later due to mistakes. For example, try not to accidentally switch the label chocolateicecream with chocoicecream later.
 
 ### Stopping the Main Program
 
