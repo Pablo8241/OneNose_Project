@@ -1,25 +1,3 @@
-## Contact
-
-For questions, suggestions, or support, please contact:
-
-**Ventsislav Ivanov**
-ventsislav@mci.sdu.dk
-
-## Repository Structure
-
-The main files and folders in this repository are:
-
-- `eNose_Program.py` — Main application with GUI, sensor reading, and ML inference
-- `enose_functions.py` — Utility functions for normalization, LED control, etc.
-- `csv_data_collecting.py` — Script for collecting labeled sensor data for ML
-- `Assets/` — Images and assets for the GUI (e.g., backgrounds)
-- `Data/` — Collected CSV data files for training
-- `Other_Scripts/` — Additional scripts for testing, diagnostics, or hardware setup
-    - `RGB_ring_simple.py`, `RGB_ring.py` — LED ring test scripts
-    - `simple_BME680_readings.py`, `simple_sgp30_readings.py` — Sensor test scripts
-    - `TCAdevice_scan.py` — I2C multiplexer scan utility
-### Data Collection Script Details
-The `csv_data_collecting.py` script is used to collect labeled sensor data for training machine learning models.
 # Directional_eNose
 
 ## Description
@@ -127,8 +105,6 @@ python3 eNose_Program.py [model.eim]
 To collect training data for machine learning:
 
 ```bash
-
-```bash
 python3 csv_data_collecting.py
 ```
 
@@ -162,3 +138,25 @@ timestamp,BME680_temp,BME680_pressure,BME680_humidity,BME680_gas,SGP30_5_CO2,SGP
 
 - Use the shutdown button on the side of the display to safely power off the Raspberry Pi.
 
+## Repository Structure
+
+The main files and folders in this repository are:
+
+- `eNose_Program.py` — Main application with GUI, sensor reading, and ML inference
+- `enose_functions.py` — Utility functions for normalization, LED control, etc.
+- `csv_data_collecting.py` — Script for collecting labeled sensor data for ML
+- `Assets/` — Images and assets for the GUI (e.g., backgrounds)
+- `Data/` — Collected CSV data files for training
+- `Other_Scripts/` — Additional scripts for testing, diagnostics, or hardware setup
+    - `RGB_ring_simple.py`, `RGB_ring.py` — LED ring test scripts
+    - `simple_BME680_readings.py`, `simple_sgp30_readings.py` — Sensor test scripts
+    - `TCAdevice_scan.py` — I2C multiplexer scan utility
+### Data Collection Script Details
+The `csv_data_collecting.py` script is used to collect labeled sensor data for training machine learning models.
+
+## Contact
+
+For questions, suggestions, or support, please contact:
+
+**Ventsislav Ivanov**
+ventsislav@mci.sdu.dk
