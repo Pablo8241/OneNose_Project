@@ -134,23 +134,22 @@ python3 csv_data_collecting.py
 
 **How it works:**
 - The script will prompt you to enter a label for the data (e.g., the odor or condition being measured).
-- It will then collect 10 complete sets of sensor readings and save them as a single row in a CSV file. It will continuously generate CSV files with new readings until you prompt it to stop.
-- You can type `stop` to finish the current file after the current set of 10 readings, or `exit` to stop immediately.
+- It will then generate CSV files with 10 readings per file from each sensor. It will continuously generate files with new readings until you prompt it to stop.
+- You can type `stop` to finish the current file after the current set of 10 readings and start new readings with a new label, or `exit` to finish the current readings and stop the script.
 - Each file is saved in the `Data/` directory with a timestamp and label in the filename.
 
 **Example CSV output:**
 
 ```
-label,temperature,pressure,humidity,gas_resistance,sgp30_5_co2,sgp30_5_tvoc,...,sgp30_10_co2,sgp30_10_tvoc
-banana,24.5,1012.3,45.2,120000,400,0,...,410,2
+timestamp,BME680_temp,BME680_pressure,BME680_humidity,BME680_gas,SGP30_5_CO2,SGP30_5_TVOC,SGP30_6_CO2,SGP30_6_TVOC,SGP30_7_CO2,SGP30_7_TVOC,SGP30_8_CO2,SGP30_8_TVOC,SGP30_9_CO2,SGP30_9_TVOC,SGP30_10_CO2,SGP30_10_TVOC
+0,31.85,1014.16,34.73,62675.71,465,931,801,736,9877,6378,57330,34938,57330,60000,6854,5475
 ```
 
 **Tips:**
-- Ensure the sensors are stable before starting a new label.
-- Use consistent labeling for best results in machine learning.
+- Ensure the sensor readings and file are generated properly after starting the script for the first time.
+- Use consistent labeling to prevent having to alter the file names later due to mistakes (e.g. try not to accidentally switch labels for chocolateicecream with chocoicecream).
 
 ### Stopping the Main Program
 
-- Use the shutdown button on the display to safely power off the Raspberry Pi.
-- To exit the GUI, use the window close button or the appropriate hardware button.
+- Use the shutdown button on the side of the display to safely power off the Raspberry Pi.
 
