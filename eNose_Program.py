@@ -141,7 +141,6 @@ def sensor_loop():
                 features.append(float(bme680_sensor.data.gas_resistance))
                 output = '{0:.2f} C,{1:.2f} hPa,{2:.2f} %RH'.format(
                     bme680_sensor.data.temperature,
-                    #bme680_sensor.data.pressure,
                     bme680_sensor.data.humidity)
                 print('{0},{1} Ohms'.format(
                     output,
@@ -150,7 +149,6 @@ def sensor_loop():
                 features.append(0.0)  # Add 0.0 if gas reading not stable
                 output = '{0:.2f} C,{1:.2f} hPa,{2:.2f} %RH'.format(
                     bme680_sensor.data.temperature,
-                    #bme680_sensor.data.pressure,
                     bme680_sensor.data.humidity)
                 print(output)
         else:
