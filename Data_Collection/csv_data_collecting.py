@@ -65,7 +65,6 @@ except (RuntimeError, IOError):
     bme680_sensor = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
 
 bme680_sensor.set_humidity_oversample(bme680.OS_2X)
-bme680_sensor.set_pressure_oversample(bme680.OS_4X)
 bme680_sensor.set_temperature_oversample(bme680.OS_8X)
 bme680_sensor.set_filter(bme680.FILTER_SIZE_3)
 bme680_sensor.set_gas_status(bme680.ENABLE_GAS_MEAS)
@@ -91,7 +90,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(script_dir, "Data")
 os.makedirs(data_dir, exist_ok=True)
 
-headers = ['timestamp', 'BME680_temp', 'BME680_pressure', 'BME680_humidity', 'BME680_gas']
+headers = ['timestamp', 'BME680_temp', 'BME680_humidity', 'BME680_gas']
 for i in range(5, 11):
     headers.append(f'SGP30_{i}_CO2')
     headers.append(f'SGP30_{i}_TVOC')
@@ -118,13 +117,12 @@ try:
                 # BME680
                 if bme680_sensor.get_sensor_data():
                     temp = round(bme680_sensor.data.temperature, 2)
-                    press = round(bme680_sensor.data.pressure, 2)
                     hum = round(bme680_sensor.data.humidity, 2)
                     gas = round(bme680_sensor.data.gas_resistance, 2) if bme680_sensor.data.heat_stable else None
                 else:
-                    temp = press = hum = gas = None
+                    temp = hum = gas = None
 
-                row += [temp, press, hum, gas]
+                row += [temp, hum, gas]
 
                 # SGP30 sensors 5 to 10
                 for sensor in used_sgp_sensors:

@@ -135,14 +135,12 @@ def sensor_loop():
         if bme680_sensor.get_sensor_data():
             # Add BME680 readings to features list
             features.append(float(bme680_sensor.data.temperature))
-            # features.append(float(bme680_sensor.data.pressure))
             features.append(float(bme680_sensor.data.humidity))
             
             if bme680_sensor.data.heat_stable:
                 features.append(float(bme680_sensor.data.gas_resistance))
                 output = '{0:.2f} C,{1:.2f} hPa,{2:.2f} %RH'.format(
                     bme680_sensor.data.temperature,
-                    bme680_sensor.data.pressure,
                     bme680_sensor.data.humidity)
                 print('{0},{1} Ohms'.format(
                     output,
@@ -151,7 +149,6 @@ def sensor_loop():
                 features.append(0.0)  # Add 0.0 if gas reading not stable
                 output = '{0:.2f} C,{1:.2f} hPa,{2:.2f} %RH'.format(
                     bme680_sensor.data.temperature,
-                    bme680_sensor.data.pressure,
                     bme680_sensor.data.humidity)
                 print(output)
         else:
@@ -308,7 +305,7 @@ def program_init():
 
     # Oversampling & Filter Settings... for improved accuracy and noise reduction
     bme680_sensor.set_humidity_oversample(bme680.OS_2X)
-    bme680_sensor.set_pressure_oversample(bme680.OS_4X)
+    #bme680_sensor.set_pressure_oversample(bme680.OS_4X)
     bme680_sensor.set_temperature_oversample(bme680.OS_8X)
     bme680_sensor.set_filter(bme680.FILTER_SIZE_3)
     bme680_sensor.set_gas_status(bme680.ENABLE_GAS_MEAS)
