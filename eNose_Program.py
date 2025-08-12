@@ -135,7 +135,7 @@ def sensor_loop():
         if bme680_sensor.get_sensor_data():
             # Add BME680 readings to features list
             features.append(float(bme680_sensor.data.temperature))
-            features.append(float(bme680_sensor.data.pressure))
+            # features.append(float(bme680_sensor.data.pressure))
             features.append(float(bme680_sensor.data.humidity))
             
             if bme680_sensor.data.heat_stable:
