@@ -305,7 +305,6 @@ def program_init():
 
     # Oversampling & Filter Settings... for improved accuracy and noise reduction
     bme680_sensor.set_humidity_oversample(bme680.OS_2X)
-    #bme680_sensor.set_pressure_oversample(bme680.OS_4X)
     bme680_sensor.set_temperature_oversample(bme680.OS_8X)
     bme680_sensor.set_filter(bme680.FILTER_SIZE_3)
     bme680_sensor.set_gas_status(bme680.ENABLE_GAS_MEAS)
