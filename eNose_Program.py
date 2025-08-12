@@ -153,7 +153,7 @@ def sensor_loop():
                 print(output)
         else:
             # Add zeros if BME680 reading fails
-            features.extend([0.0, 0.0, 0.0, 0.0])
+            features.extend([0.0, 0.0, 0.0])
         
         # Add SGP30 sensor readings (indexes 4-9) to features list
         for i in range(4, 10):  # SGP30_5 to SGP30_10 (indexes 4-9)
