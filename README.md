@@ -142,8 +142,9 @@ The main files and folders in this repository are:
 
 - `eNose_Program.py` — Main application with GUI, sensor reading, and ML inference
 - `enose_functions.py` — Utility functions for normalization, LED control, etc.
-- `csv_data_collecting.py` — Script for collecting labeled sensor data for ML
-- `Assets/` — Images and assets for the GUI (e.g., backgrounds)
+- `Assets/` — Images, datasheets, old data, supplementary info regarding setup
+- `Data_Collection/`
+    - `csv_data_collecting.py` — Script for collecting labeled sensor data for ML
 - `Data/` — Collected CSV data files for training
 - `Other_Scripts/` — Additional scripts for testing, diagnostics, or hardware setup
     - `RGB_ring_simple.py`, `RGB_ring.py` — LED ring test scripts
