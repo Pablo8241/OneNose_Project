@@ -39,7 +39,7 @@ The main program (`eNose_Program.py`) continuously monitors all sensors and envi
 
 6. **Final Assembly**: You can now screw the top cover in place.
 
-![Final Device Diagram](Assets/final_diagram.jpg)
+<img src="Assets/final_diagram.jpg" alt="Final Device Diagram" width="400" height="400">
 
 ## Data Collection Setup
 
