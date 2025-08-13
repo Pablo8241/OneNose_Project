@@ -91,6 +91,11 @@ def sensor_loop():
             except Exception as e:
                 print(f"Error reading SGP30_{i+1}: {e}")
 
+                errorlabel5.after(0, lambda: errorlabel5.config(
+                        text=f"{e}",
+                        foreground="red"
+                    ))
+
                 co2_readings.append(None)
                 tvoc_readings.append(None)
                 combined_scores.append(-1)  # Force it to be lowest
@@ -272,6 +277,19 @@ def start_gui():
         justify="center"                         
     )
     label4.pack(pady=(2, 0))  # Move expand=True to the second label
+
+    # Create a fifth label below the fourth (this one will display error messages)
+    global errorlabel5
+
+    errorlabel5 = tk.Label(
+        window,
+        text="",
+        foreground="red",                      
+        background="#ffffff",                      
+        font=("Helvetica", 35, "bold"),       
+        justify="center"                         
+    )
+    errorlabel5.pack(pady=(2, 0))  # Move expand=True to the second label
 
     window.mainloop()  # Start the Tkinter main loop
 
