@@ -92,14 +92,17 @@ def sensor_loop():
                 print(f"Error reading SGP30_{i+1}: {e}")
 
                 errorlabel5.after(0, lambda: errorlabel5.config(
-                        text=f"{e}",
-                        foreground="red"
+                    text=f"error detected",
+                    foreground="red"
                     ))
 
                 co2_readings.append(None)
                 tvoc_readings.append(None)
                 combined_scores.append(-1)  # Force it to be lowest
-
+        errorlabel5.after(0, lambda: errorlabel5.config(
+            text=f"something",
+            foreground="red"
+            ))
         # Now find which sensor has the highest readings for determining the direction of the smell
         # --- Only use outer 4 sensors (0 to 3) for scoring and LED ---
         outer_scores = combined_scores[:4]  # only use first 4 sensor scores
