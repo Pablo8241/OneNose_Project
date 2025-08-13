@@ -127,13 +127,13 @@ def sensor_loop():
 
         # Print SGP30 sensor data
         print("-" * 50)
-        errorlabel5.after(0, lambda: errorlabel5.config(
-                    text="",
-                    foreground="red"
-                    ))
         for i, (co2, tvoc) in enumerate(zip(co2_readings, tvoc_readings)):
             if co2 is not None and tvoc is not None:
                 print(f"SGP30_{i+1}: CO2={co2}ppm, TVOC={tvoc}ppb")
+                errorlabel5.after(0, lambda: errorlabel5.config(
+                    text="",
+                    foreground="red"
+                    ))
             else:
                 print(f"SGP30_{i+1}: Error reading sensor")
                 errorlabel5.after(0, lambda: errorlabel5.config(
