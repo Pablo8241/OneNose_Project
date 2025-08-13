@@ -39,6 +39,8 @@ The main program (`eNose_Program.py`) continuously monitors all sensors and envi
 
 6. **Final Assembly**: You can now screw the top cover in place.
 
+![Final Device Diagram](Assets/final_diagram.jpg)
+
 ## Data Collection Setup
 
 ### CSV Data Collection Order
@@ -92,7 +94,7 @@ To deploy your trained machine learning model from Edge Impulse:
 To start the main GUI application (with optional Edge Impulse model):
 
 ```bash
-python3 eNose_Program.py [model.eim]
+sudo /home/pablo/appenv/bin/python3 /home/pablo/OneNose_Project/eNose_Program.py model.py
 ```
 
 - If you provide a `.eim` file, the program will use it for real-time odor classification.
@@ -103,7 +105,7 @@ python3 eNose_Program.py [model.eim]
 To collect training data for machine learning:
 
 ```bash
-python3 csv_data_collecting.py
+/home/pablo/appenv/bin/python3 /home/pablo/OneNose_Project/Data_Collection/csv_data_collecting.py
 ```
 
 **How it works:**
@@ -129,12 +131,12 @@ timestamp,BME680_temp,BME680_humidity,BME680_gas,SGP30_5_CO2,SGP30_5_TVOC,SGP30_
 ```
 
 **Tips:**
-- Ensure the sensor readings and file are generated properly after starting the script for the first time. For example, look for corrupt/empty readings or improperly generated CSV file.
-- Use consistent labeling to prevent having to alter the file names later due to mistakes. For example, try not to accidentally switch the label chocolateicecream with chocoicecream later.
+- Ensure the sensor readings and files are generated properly after starting the script for the first time. For example, look for corrupt/empty readings or improperly generated CSV file.
+- Use consistent labeling to prevent having to alter the file names later due to mistakes. For example, try not to accidentally switch the label chocolateicecream with chocoicecream later (yes, it happened :D).
 
 ### Stopping the Main Program
 
-- Use the shutdown button on the side of the display to safely power off the Raspberry Pi.
+- Use the shutdown button on the side of the display to safely power off the Raspberry Pi before cutting the power.
 
 ## Repository Structure
 
@@ -145,7 +147,7 @@ The main files and folders in this repository are:
 - `Assets/` — Images, datasheets, old data, supplementary info regarding setup
 - `Data_Collection/`
     - `csv_data_collecting.py` — Script for collecting labeled sensor data for ML
-- `Data/` — Collected CSV data files for training
+    - `Data/` — Collected CSV data files for training
 - `Other_Scripts/` — Additional scripts for testing, diagnostics, or hardware setup
     - `RGB_ring_simple.py`, `RGB_ring.py` — LED ring test scripts
     - `simple_BME680_readings.py`, `simple_sgp30_readings.py` — Sensor test scripts
