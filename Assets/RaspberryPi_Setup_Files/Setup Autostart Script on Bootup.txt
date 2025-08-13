@@ -5,14 +5,18 @@ mkdir -p ~/.config/autostart
 2. Create the autostart .desktop file.
 nano ~/.config/autostart/enose.desktop
 
-3. Write/Paste the following into the file that you just created.
+3. Install imv package.
+sudo apt update
+sudo apt install imv
+
+4. Write/Paste the following into the file that you just created. Make sure you specify the correct graphical environment and name of environment and user name.
 [Desktop Entry]
 Type=Application
 Name=eNose
-Exec=sudo /home/pablo/appenv/bin/python /home/pablo/OneNose_Project/eNose_Program.py model.py
-X-GNOME-Autostart-enabled=true
+Exec=bash -c "imv-x11 -f /home/pablo/OneNose_Project/Assets/shutdown.png & exec sudo /home/pablo/appenv/bin/python /home/pablo/OneNose_Project/eNose_Program.py model.py" 
+X-GNOME-Autostart-enabled=true 
 
 Make sure all paths are absolute and correct.
 
-3. Save and exit:
+5. Save and exit:
 Press Ctrl + X, then Y, then Enter
